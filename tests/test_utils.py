@@ -1,7 +1,7 @@
 import pytest
 
 from classes.category import Category
-from utils import create_categories, add_product_to_category
+from utils import create_categories, add_product
 
 if __name__ == '__main__':
     pytest.main()
@@ -13,7 +13,7 @@ def test_create_categories():
 
 def test_add_property_to_category(categories_test):
     initial_total_unique_products = Category.product_count
-    add_product_to_category(
+    add_product(
         categories_test,
         'test1',
         {
