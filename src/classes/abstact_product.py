@@ -5,7 +5,7 @@ class AbstractProduct(ABC):
 
     @classmethod
     @abstractmethod
-    def create_product(cls, new_product: dict, product_list: list = None):
+    def new_product(cls, new_product: dict, product_list: list = None):
         pass  # pragma: no cover
 
     @abstractmethod

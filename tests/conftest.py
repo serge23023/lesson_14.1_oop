@@ -1,13 +1,12 @@
 import json
 import os
 import sys
-
 import pytest
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
 from classes.category import Category
 from classes.product import Product
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
 
 @pytest.fixture()
@@ -47,5 +46,5 @@ def categories_test(product_dict_test):
         Category(
             'test1',
             'description',
-            [Product.create_product(product_dict_test['product1'])])
+            [Product.new_product(product_dict_test['product1'])])
     ].copy()

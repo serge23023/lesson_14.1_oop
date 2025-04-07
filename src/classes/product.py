@@ -15,12 +15,12 @@ class Product(AbstractProduct, MixinCreationLogger):
     __slots__ = ('name', 'description', '__price', 'quantity')
 
     @classmethod
-    def create_product(cls, new_product: dict, product_list: list = None):
+    def new_product(cls, product_data: dict, product_list: list = None):
         """
         Создает новый объект Product или обновляет существующий в списке товаров.
 
         Args:
-            new_product (dict): Словарь с данными нового товара (name, description, price, quantity).
+            product_data (dict): Словарь с данными нового товара (name, description, price, quantity).
             product_list (list, optional): Список существующих объектов Product. Defaults to None.
 
         Returns:
@@ -33,19 +33,19 @@ class Product(AbstractProduct, MixinCreationLogger):
             product_list = []
 
         for product in product_list:
-            if product.name == new_product['name']:
+            if product.name == product_data['name']:
                 # Найден товар с таким же именем
-                if product.price >= new_product['price']:
+                if product.price >= product_data['price']:
                     # Если текущая цена выше, используем ее
-                    product.quantity += new_product['quantity']
+                    product.quantity += product_data['quantity']
                     return
                 else:
                     # Если новая цена выше, обновляем цену и количество
-                    product.price = new_product['price']
-                    product.quantity += new_product['quantity']
+                    product.price = product_data['price']
+                    product.quantity += product_data['quantity']
                     return
         # Если товар уникален, создаем новый объект
-        return cls(**new_product)
+        return cls(**product_data)
 
     def __init__(self, name: str, description: str, price: float, quantity: int):
         """
@@ -85,7 +85,7 @@ class Product(AbstractProduct, MixinCreationLogger):
             ValueError: Если цена меньше или равна 0.
         """
         if value <= 0:
-            raise ValueError("Введена некорректная цена")
+            print("Ошибка: Цена не должна быть нулевой или отрицательной.")
         elif value < self.__price:
             # Подтверждение снижения цены
             if input(f'Цена после подтверждения: {value} руб.\nВведите "y" для подтверждения понижения цены:') == 'y':
