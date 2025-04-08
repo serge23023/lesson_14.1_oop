@@ -1,158 +1,101 @@
-from classes.mixin_log import MixinLogger
+import pytest
+
+from classes.category import Category
 from classes.Products_Classes.product import Product
 
+if __name__ == '__main__':  # pragma: no cover
+    pytest.main()
 
-class Category(MixinLogger):
+
+def test_category(categories_test, product_dict_test):
     """
-    Класс `Category` представляет категорию товаров.
+    Тест проверяет корректность создания объекта `Category` и его атрибутов.
 
-    Наследует:
-        - `MixinLogger`: Миксин для логирования событий создания объекта.
+    Args:
+        categories_test (list[Category]): Список тестовых категорий.
+        product_dict_test (dict): Тестовые данные продуктов.
 
-    Наследует:
-        - `MixinLogger`: Миксин для логирования событий создания объекта.
-
-    Attributes:
-        (класса)
-        __category_count (int): Количество созданных объектов `Category`.
-        __product_count (int): Количество уникальных товаров среди всех категорий.
-
-        (экземпляра)
-        __name (str): Название категории.
-        __description (str): Описание категории.
-        __products (list[Product]): Список товаров, принадлежащих данной категории.
+    Assertions:
+        - Проверка типа объекта категории.
+        - Проверка имени и описания категории.
+        - Проверка типа списка продуктов внутри категории.
+        - Проверка типа первого продукта в списке.
+        - Проверка длины списка продуктов.
+        - Проверка строкового представления категории.
+        - Проверка количества категорий и уникальных продуктов.
+        - Добавление новой категории и проверка обновленного количества категорий.
     """
+    category1 = categories_test[0]
 
-    __slots__ = ('__name', '__description', '__products')  # Оптимизация использования памяти.
+    # Проверяем категорию
+    assert isinstance(category1, Category)
+    assert category1.name == 'test1'
+    assert category1.description == 'description'
+    assert isinstance(category1.products, list)
+    assert isinstance(category1.products[0], Product)
+    assert len(category1) == 0
+    assert str(category1) == f"\ntest1, количество продуктов: {len(category1)} шт."
 
-    __category_count = 0
-    __product_count = 0
+    # Проверяем общее количество категорий и уникальных продуктов
+    assert Category.category_count == 1
+    assert Category.product_count == 1
+    print(category1.products)
 
-    @classmethod
-    @property
-    def category_count(cls):
-        """
-        Возвращает общее количество созданных категорий.
+    # Добавляем новую категорию и проверяем общее количество категорий
+    category2 = Category('test2', 'description')
+    categories_test.append(category2)
+    assert Category.category_count == 2
 
-        Returns:
-            int: Количество объектов `Category`.
-        """
-        return cls.__category_count
 
-    @classmethod
-    @property
-    def product_count(cls):
-        """
-        Возвращает общее количество уникальных товаров среди всех категорий.
+def test_add_product(categories_test, product_dict_test):
+    """
+    Тест проверяет добавление продуктов в категорию.
 
-        Returns:
-            int: Количество уникальных товаров.
-        """
-        return cls.__product_count
+    Args:
+        categories_test (list[Category]): Список тестовых категорий.
+        product_dict_test (dict): Тестовые данные продуктов.
 
-    @classmethod
-    def reset(cls):
-        """
-        Сбрасывает счётчики категорий и товаров до нуля.
-        """
-        cls.__category_count = 0
-        cls.__product_count = 0
+    Assertions:
+        - Добавление нового продукта и проверка увеличения количества уникальных продуктов.
+        - Проверка наличия нового продукта в списке товаров категории.
+        - Добавление дубликата продукта и проверка количества уникальных товаров.
+        - Добавление нового уникального продукта и проверка увеличения количества уникальных продуктов.
+        - Проверка исключения при попытке добавить объект, который не является `Product`.
+    """
+    category = categories_test[0]
 
-    def __init__(self, name: str, description: str, products: list[Product] = None):
-        """
-        Инициализирует объект `Category`.
+    # Добавляем продукты в категорию и проверяем общее количество уникальных продуктов и его наличие в списке продуктов
+    new_product = Product(**product_dict_test['product4'])
+    category.add_product(new_product)
+    assert Category.product_count == 2
+    assert any(product.name == new_product.name for product in category.products)
 
-        Args:
-            name (str): Название категории.
-            description (str): Описание категории.
-            products (list[Product], optional): Список товаров в категории. По умолчанию — пустой список.
-        """
-        self.__name = name
-        self.__description = description
-        self.__products = products if products else []
+    # Добавляем продукт, который уже существует, и проверяем общее количество уникальных продуктов
+    category.add_product(new_product)
+    assert Category.product_count == 2
 
-        Category.__category_count += 1
-        Category.__product_count += len(set(p.name for p in self.__products))
+    # Добавляем продукт с новым именем и проверяем общее количество уникальных продуктов
+    new_unique_product = Product(**product_dict_test['product5'])
+    category.add_product(new_unique_product)
+    assert Category.product_count == 3
 
-        self.log_creation()  # Логирование создания категории.
+    # Добавляем объект тип которого не class Product или его наследник
+    with pytest.raises(TypeError):
+        category.add_product("Not a product")
 
-        Category.__category_count += 1
-        Category.__product_count += len(set(p.name for p in self.__products))
 
-    @property
-    def name(self) -> str:
-        """
-        Возвращает название категории.
-
-        Returns:
-            str: Название категории.
-        """
-        return self.__name
-
-    @property
-    def description(self) -> str:
-        """
-        Возвращает описание категории.
-
-        Returns:
-            str: Описание категории.
-        """
-        return self.__description
-
-    @property
-    def products(self) -> list[Product]:
-        """
-        Возвращает список товаров в данной категории.
-
-        Returns:
-            list[Product]: Список продуктов категории.
-        """
-        return self.__products
-
-    def __len__(self) -> int:
-        """
-        Возвращает общее количество товаров в категории с учётом их количества.
-
-        Returns:
-            int: Суммарное количество единиц товаров.
-        """
-        return sum(product.quantity for product in self.__products)
-
-    def __str__(self) -> str:
-        """
-        Возвращает строковое представление категории.
-
-        Returns:
-            str: Название категории и количество товаров.
-        """
-        return f"\n{self.__name}, количество продуктов: {len(self)} шт."
-
-    def __repr__(self) -> str:
-        """
-        Возвращает техническое представление объекта `Category`.
-
-        Returns:
-            str: Представление объекта для разработчиков.
-        """
-        return f"{self.__class__.__name__}('{self.__name}', '{self.__description}', {self.__products})"
-
-    def add_product(self, product: Product):
-        """
-        Добавляет товар в категорию, при необходимости обновляя уже существующий.
-
-        Args:
-            product (Product): Товар для добавления.
-
-        Raises:
-            TypeError: Если объект не является экземпляром `Product`.
-        """
-        if not isinstance(product, Product):
-            raise TypeError("Должен быть объект класса Product")
-
-        for existing_product in self.__products:
-            if product.name == existing_product.name:
-                Product.edit_product(product.price, product.quantity, existing_product)
-                return
-
-        Category.__product_count += 1
-        self.__products.append(product)
+# def test_average_price(categories_test):
+#     """
+#     Тест проверяет корректность расчёта средней цены товаров в категории.
+#
+#     Args:
+#         categories_test (list[Category]): Список тестовых категорий.
+#
+#     Assertions:
+#         - Проверка корректного расчёта средней цены товаров.
+#         - Проверка расчёта средней цены после удаления всех товаров.
+#     """
+#     category = categories_test[0]
+#     assert category.average_price() == 1.0
+#     category.products.remove(category.products[0])
+#     assert category.average_price() == 0

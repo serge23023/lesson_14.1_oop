@@ -96,7 +96,6 @@ def test_price_setter_lower():
         product.price = 5.0
     assert product.price == 5.0
 
-
 def test_price_setter_raise():
     """
     Тестирование увеличения цены.
@@ -114,7 +113,6 @@ def test_price_setter_raise():
     assert product1.description == product_dict_test[key_dict]['description']
     assert product1.price == product_dict_test[key_dict]['price']
     assert product1.quantity == product_dict_test[key_dict]['quantity']
-
 
 def test_add_product(product_dict_test):
     """
