@@ -72,8 +72,7 @@ def test_price_setter_negative(capsys):
 
     captured = capsys.readouterr()
     relevant_output = "\n".join(
-        line for line in captured.out.splitlines() if "Ошибка: Цена не должна быть" in line
-    )
+        line for line in captured.out.splitlines() if "Ошибка: Цена не должна быть" in line)
 
     assert "Ошибка: Цена не должна быть нулевой или отрицательной." in relevant_output
     assert product.price == 10.0
@@ -88,7 +87,6 @@ def test_price_setter_lower():
         - Проверка, что цена уменьшается при подтверждении пользователя.
     """
     product = Product('name', 'description', 10.0, 10)
-
     with patch('builtins.input', return_value=''):
         product.price = 5.0
     assert product.price == 10.0
