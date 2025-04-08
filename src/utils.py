@@ -4,14 +4,19 @@ from read_file import open_json
 
 
 def create_categories():
-    categories = []
-    for item in open_json('products.json', True):
-        item['products'] = [Product.new_product(product) for product in item['products']]
+    """
+    Создает список объектов Category из данных JSON-файла.
+
+    Открывает файл 'products.json', извлекает данные, создает объекты Product для товаров
+    и добавляет их в соответствующие категории.
+
+    Returns:
+        list[Category]: Список объектов категории.
+    """
+    categories = []  # Инициализация списка категорий
+    for item in open_json('products.json', True):  # Чтение данных из JSON-файла
+        # Создание объектов Product для товаров в категории
+        item['products'] = [Product(**product) for product in item['products']]
+        # Создание объекта Category и добавление в список
         categories.append(Category(**item))
-    return categories
-
-
-def add_product(categories: list[Category], name: str, product: dict):
-    for category in categories:
-        if category.name == name:
-            category.add_product(Product.new_product(product, category.products))
+    return categories  # Возврат списка категорий

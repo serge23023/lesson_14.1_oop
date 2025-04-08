@@ -102,59 +102,6 @@ class Category(MixinCreationLogger):
         """
         return self.__description
 
-    def __len__(self):
-        """
-        Возвращает количество всех товаров в категории (с учетом их количества).
-
-        Returns:
-            int: Количество товаров.
-        """
-        count = 0
-        for product in self.__products:
-            count += product.quantity
-        return count
-
-    def __str__(self):
-        """
-        Возвращает строковое представление категории.
-
-        Returns:
-            str: Строка с названием и количеством товаров.
-        """
-        return f"\n{self.__name}, количество продуктов: {len(self)} шт."
-
-    def add_product(self, product: Product):
-        """
-        Добавляет товар в категорию и обновляет количество уникальных товаров.
-
-        Args:
-            product (Product): Товар для добавления.
-
-        Raises:
-            TypeError: Если объект не является экземпляром Product.
-        """
-        if not isinstance(product, Product):
-            raise TypeError("Должен быть объект класса Product")
-
-        if product.name not in (p.name for p in self.__products):
-            Category.__product_count += 1
-        self.__products.append(product)
-
-    def average_price(self):
-        """
-        Вычисляет среднюю цену товаров в категории.
-
-        Returns:
-            float: Средняя цена товаров. Возвращает 0, если список товаров пуст.
-        """
-        total_price = 0
-        for product in self.__products:
-            total_price += product.price
-        try:
-            return total_price / len(self.__products)
-        except ZeroDivisionError:
-            return 0
-
     def __repr__(self):
         """
         Возвращает техническое представление объекта категории.
