@@ -20,10 +20,10 @@ class Category(MixinLogger):
         __products (list[Product]): Список товаров, принадлежащих данной категории.
     """
 
-    __slots__ = ('name', 'description', 'products')  # Оптимизация использования памяти.
+    __slots__ = ('__name', '__description', '__products')  # Оптимизация памяти путем ограничения допустимых атрибутов.
 
-    __category_count = 0
-    __product_count = 0
+    __category_count = 0  # Общий счетчик категорий.
+    __product_count = 0  # Счетчик уникальных товаров.
 
     @classmethod
     @property
@@ -93,6 +93,45 @@ class Category(MixinLogger):
         """
         return self.__description
 
+    def __len__(self):
+        """
+        Возвращает количество всех товаров в категории (с учетом их количества).
+
+        Returns:
+            int: Количество товаров.
+        """
+        count = 0
+        for product in self.__products:  # Перебирает все товары в категории.
+            count += product.quantity  # Суммирует количество каждого товара.
+        return count
+
+    def __str__(self):
+        """
+        Возвращает строковое представление категории.
+
+        Returns:
+            str: Строка с названием и количеством товаров.
+        """
+        return f"\n{self.__name}, количество продуктов: {len(self)} шт."  # Форматирует строку с данными категории.
+
+    def add_product(self, product: Product):
+        """
+        Добавляет товар в категорию и обновляет количество уникальных товаров.
+
+        Args:
+            product (Product): Товар для добавления.
+
+        Raises:
+            TypeError: Если объект не является экземпляром Product.
+        """
+        if not isinstance(product, Product):  # Проверяет, что добавляемый объект — это Product.
+            raise TypeError("Должен быть объект класса Product")
+
+        if product.name not in (p.name for p in self.__products):  # Если товар уникален, увеличивает счетчик.
+            Category.__product_count += 1
+        self.__products.append(product)  # Добавляет товар в список.
+
+    def __repr__(self):
     @property
     def products(self) -> list[Product]:
         """
