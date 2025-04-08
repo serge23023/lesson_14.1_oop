@@ -129,3 +129,4 @@ dmypy.json
 # Pyre type checker
 .pyre/
 /.flake8
+/src/classes/abstact_product.py
