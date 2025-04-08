@@ -6,6 +6,9 @@ class Product(MixinLogger):
     """
     Класс Product описывает товар с основными атрибутами и методами для работы с ним.
 
+    Наследует:
+        - MixinLogger: Миксин для логирования объекта.
+
     Attributes:
         name (str): Название товара.
         description (str): Описание товара.
