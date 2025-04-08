@@ -1,129 +1,108 @@
-from classes.mixin_log import MixinCreationLogger
-from classes.abstact_product import AbstractProduct
+from typing import Optional
+from classes.mixin_log import MixinLogger
 
 
-class Product(AbstractProduct, MixinCreationLogger):
+class Product(MixinLogger):
     """
-    Класс Product представляет товар с именем, описанием, ценой и количеством.
-    Реализует методы для создания товара, работы с ценой и выполнения арифметических операций.
+    Класс Product описывает товар с основными атрибутами и методами для работы с ним.
+
     Наследует:
-    - AbstractProduct: Базовый абстрактный класс.
-    - MixinCreationLogger: Миксин для логирования создания объекта.
+        - MixinLogger: Миксин для логирования объекта.
+
+    Attributes:
+        name (str): Название товара.
+        description (str): Описание товара.
+        __price (float): Цена товара.
+        quantity (int): Количество товара.
     """
 
-    # Использование __slots__ для ограничения атрибутов объекта и оптимизации памяти
+    # Оптимизация памяти: ограничиваем атрибуты экземпляра только перечисленными
     __slots__ = ('name', 'description', '__price', 'quantity')
 
     @classmethod
-    def new_product(cls, product_data: dict, product_list: list = None):
+    def new_product(cls, product_data: dict, product_list: Optional[list] = None) -> Optional['Product']:
         """
-        Создает новый объект Product или обновляет существующий в списке товаров.
+        Создаёт новый объект Product или обновляет существующий объект в списке.
 
         Args:
-            product_data (dict): Словарь с данными нового товара (name, description, price, quantity).
-            product_list (list, optional): Список существующих объектов Product. Defaults to None.
+            product_data (dict): Данные товара (имя, описание, цена, количество).
+            product_list (list, optional): Список существующих товаров. Defaults to None.
 
         Returns:
-            Product: Новый или обновленный объект Product.
-
-        Raises:
-            Возвращает None, если товар обновлен в списке существующих товаров.
+            Optional[Product]: Новый объект Product или None, если товар обновлён.
         """
         if product_list is None:
-            product_list = []
+            product_list = []  # Инициализация пустого списка, если он не указан.
 
         for product in product_list:
-            if product.name == product_data['name']:
-                # Найден товар с таким же именем
-                if product.price >= product_data['price']:
-                    # Если текущая цена выше, используем ее
-                    product.quantity += product_data['quantity']
-                    return
-                else:
-                    # Если новая цена выше, обновляем цену и количество
-                    product.price = product_data['price']
-                    product.quantity += product_data['quantity']
-                    return
-        # Если товар уникален, создаем новый объект
-        return cls(**product_data)
+            if product.name == product_data['name']:  # Проверка на совпадение имени товара.
+                product.price = product_data['price']  # Используем сеттер для обновления цены.
+                product.quantity += product_data['quantity']  # Обновляем количество товара.
+                return None  # Возвращаем None, если обновили существующий товар.
+        return cls(**product_data)  # Создаем новый товар, если он уникален.
 
-    def __init__(self, name: str, description: str, price: float, quantity: int):
+    def __init__(self, name: str, description: str, price: float, quantity: int) -> None:
         """
-        Инициализирует объект Product.
+        Инициализирует объект товара.
 
         Args:
             name (str): Название товара.
             description (str): Описание товара.
             price (float): Цена товара.
             quantity (int): Количество товара.
+
+        Returns:
+            None
         """
         self.name = name
         self.description = description
-        self.__price = price  # Установка цены через внутренний атрибут
+        self.__price = price
         self.quantity = quantity
-        self.log_creation()  # Логирует создание объекта
+        self.log_creation()  # Логируем создание объекта через миксин.
 
     @property
-    def price(self):
+    def price(self) -> float:
         """
         Возвращает текущую цену товара.
 
         Returns:
             float: Цена товара.
         """
-        return self.__price
+        return self.__price  # Получаем текущую цену через геттер.
 
     @price.setter
-    def price(self, value):
+    def price(self, value: float) -> None:
         """
-        Устанавливает новую цену товара. Требует подтверждение при снижении цены.
+        Устанавливает новую цену товара.
 
         Args:
             value (float): Новая цена товара.
 
-        Raises:
-            ValueError: Если цена меньше или равна 0.
+        Returns:
+            None
         """
         if value <= 0:
             print("Ошибка: Цена не должна быть нулевой или отрицательной.")
-        elif value < self.__price:
-            # Подтверждение снижения цены
+        elif value < self.__price:  # Если новая цена ниже текущей, требуется подтверждение.
             if input(f'Цена после подтверждения: {value} руб.\nВведите "y" для подтверждения понижения цены:') == 'y':
-                self.__price = float(value)
+                self.__price = value  # Устанавливаем новую цену после подтверждения.
         else:
-            self.__price = float(value)
+            self.__price = value  # Устанавливаем новую цену без подтверждения.
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
-        Возвращает строковое представление объекта Product.
+        Возвращает строковое представление объекта.
 
         Returns:
-            str: Информация о товаре (название, цена, количество).
+            str: Название товара, его цена и остаток.
         """
-        return f"\n{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
+        return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."  # Удобный вывод для пользователя.
 
-    def __add__(self, other):
+    def __repr__(self) -> str:
         """
-        Сложение стоимости двух объектов Product.
-
-        Args:
-            other (Product): Другой объект Product.
+        Возвращает техническое представление объекта.
 
         Returns:
-            float: Общая стоимость двух товаров.
-
-        Raises:
-            TypeError: Если другой объект не является экземпляром Product.
-        """
-        if type(self) is not type(other):
-            raise TypeError
-        return self.__price * self.quantity + other.__price * other.quantity
-
-    def __repr__(self):
-        """
-        Возвращает строковое представление объекта для разработчиков.
-
-        Returns:
-            str: Конструктор объекта в виде строки.
+            str: Представление объекта для разработчиков.
         """
         return f"{self.__class__.__name__}('{self.name}', '{self.description}', {self.price}, {self.quantity})"

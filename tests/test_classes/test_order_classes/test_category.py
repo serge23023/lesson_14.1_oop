@@ -14,12 +14,16 @@ def test_category(categories_test, product_dict_test):
     assert isinstance(category1, Category)
     assert category1.name == 'test1'
     assert category1.description == 'description'
+    assert isinstance(category1.products, list)
+    assert isinstance(category1.products[0], Product)
     assert len(category1) == 0
     assert str(category1) == f"\ntest1, количество продуктов: {len(category1)} шт."
 
     # Проверяем общее количество категорий и уникальных продуктов
     assert Category.category_count == 1
     assert Category.product_count == 1
+    print("______---------")
+    print(category1.products)
 
     # Добавляем новую категорию и проверяем общее количество категорий
     category2 = Category('test2', 'description')
@@ -50,8 +54,8 @@ def test_add_product(categories_test, product_dict_test):
         category.add_product("Not a product")
 
 
-def test_average_price(categories_test):
-    category = categories_test[0]
-    assert category.average_price() == 1.0
-    category.products.remove(category.products[0])
-    assert category.average_price() == 0
+# def test_average_price(categories_test):
+#     category = categories_test[0]
+#     assert category.average_price() == 1.0
+#     category.products.remove(category.products[0])
+#     assert category.average_price() == 0

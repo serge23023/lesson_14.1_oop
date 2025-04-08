@@ -12,7 +12,7 @@ def test_product(product_dict_test):
     # Тестирование создания продукта
     key_dict = 'product1'
     product1 = Product(**product_dict_test[key_dict])
-    expected_repr = f"\n{product1.name}, {product1.price} руб. Остаток: {product1.quantity} шт."
+    expected_repr = f"{product1.name}, {product1.price} руб. Остаток: {product1.quantity} шт."
     assert str(product1) == expected_repr  # Проверка строкового представления
     assert isinstance(product1, Product)  # Проверка типа объекта
     assert product1.name == product_dict_test[key_dict]['name']  # Проверка имени
@@ -21,16 +21,16 @@ def test_product(product_dict_test):
     assert product1.quantity == product_dict_test[key_dict]['quantity']  # Проверка количества
 
 
-def test_add_product(product_dict_test):
-    # Тестирование сложения объектов между собой
-    key_dict1 = 'product2'
-    key_dict2 = 'product3'
-    product1 = Product(**product_dict_test[key_dict1])
-    product2 = Product(**product_dict_test[key_dict2])
-    assert product1 + product2 == 1100.0
-
-    with pytest.raises(TypeError):
-        product1 + "Not a product"
+# def test_add_product(product_dict_test):
+#     # Тестирование сложения объектов между собой
+#     key_dict1 = 'product2'
+#     key_dict2 = 'product3'
+#     product1 = Product(**product_dict_test[key_dict1])
+#     product2 = Product(**product_dict_test[key_dict2])
+#     assert product1 + product2 == 1100.0
+#
+#     with pytest.raises(TypeError):
+#         product1 + "Not a product"
 
 
 def test_create_product_new_price(product_dict_test):

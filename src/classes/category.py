@@ -1,30 +1,26 @@
-from classes.mixin_log import MixinCreationLogger
+from classes.mixin_log import MixinLogger
 from classes.product import Product
 
 
-class Category(MixinCreationLogger):
+class Category(MixinLogger):
     """
     Класс Category представляет категорию товаров.
 
-    Атрибуты класса:
+    Наследует:
+        - MixinLogger: Миксин для логирования объекта.
+
+    Attributes:
         __category_count (int): Хранит количество созданных объектов класса Category.
         __product_count (int): Хранит количество уникальных товаров среди всех категорий.
-
-    Атрибуты экземпляра:
         __name (str): Название категории.
         __description (str): Описание категории.
         __products (list[Product]): Список товаров, принадлежащих категории.
-
-    Методы класса:
-        category_count: Возвращает количество созданных категорий.
-        product_count: Возвращает количество уникальных товаров.
-        reset: Сбрасывает счетчики категорий и товаров.
     """
 
-    __slots__ = ('__name', '__description', '__products')
+    __slots__ = ('__name', '__description', '__products')  # Оптимизация памяти путем ограничения допустимых атрибутов.
 
-    __category_count = 0
-    __product_count = 0
+    __category_count = 0  # Общий счетчик категорий.
+    __product_count = 0  # Счетчик уникальных товаров.
 
     @classmethod
     @property
@@ -65,12 +61,12 @@ class Category(MixinCreationLogger):
             description (str): Описание категории.
             products (list[Product], optional): Список товаров. По умолчанию пустой список.
         """
-        self.__name = name
-        self.__description = description
-        self.__products = products if products else []
-        Category.__category_count += 1
-        Category.__product_count += len(set(p.name for p in self.__products))
-        self.log_creation()
+        self.__name = name  # Устанавливает название категории.
+        self.__description = description  # Устанавливает описание категории.
+        self.__products = products if products else []  # Сохраняет список товаров или создает пустой список.
+        Category.__category_count += 1  # Увеличивает счетчик категорий.
+        Category.__product_count += len(set(p.name for p in self.__products))  # Подсчитывает уникальные товары.
+        self.log_creation()  # Логирует создание категории.
 
     @property
     def products(self):
@@ -110,8 +106,8 @@ class Category(MixinCreationLogger):
             int: Количество товаров.
         """
         count = 0
-        for product in self.__products:
-            count += product.quantity
+        for product in self.__products:  # Перебирает все товары в категории.
+            count += product.quantity  # Суммирует количество каждого товара.
         return count
 
     def __str__(self):
@@ -121,7 +117,7 @@ class Category(MixinCreationLogger):
         Returns:
             str: Строка с названием и количеством товаров.
         """
-        return f"\n{self.__name}, количество продуктов: {len(self)} шт."
+        return f"\n{self.__name}, количество продуктов: {len(self)} шт."  # Форматирует строку с данными категории.
 
     def add_product(self, product: Product):
         """
@@ -133,27 +129,12 @@ class Category(MixinCreationLogger):
         Raises:
             TypeError: Если объект не является экземпляром Product.
         """
-        if not isinstance(product, Product):
+        if not isinstance(product, Product):  # Проверяет, что добавляемый объект — это Product.
             raise TypeError("Должен быть объект класса Product")
 
-        if product.name not in (p.name for p in self.__products):
+        if product.name not in (p.name for p in self.__products):  # Если товар уникален, увеличивает счетчик.
             Category.__product_count += 1
-        self.__products.append(product)
-
-    def average_price(self):
-        """
-        Вычисляет среднюю цену товаров в категории.
-
-        Returns:
-            float: Средняя цена товаров. Возвращает 0, если список товаров пуст.
-        """
-        total_price = 0
-        for product in self.__products:
-            total_price += product.price
-        try:
-            return total_price / len(self.__products)
-        except ZeroDivisionError:
-            return 0
+        self.__products.append(product)  # Добавляет товар в список.
 
     def __repr__(self):
         """
