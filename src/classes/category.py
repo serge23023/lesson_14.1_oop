@@ -9,6 +9,9 @@ class Category(MixinLogger):
     Наследует:
         - `MixinLogger`: Миксин для логирования событий создания объекта.
 
+    Наследует:
+        - MixinLogger: Миксин для логирования объекта.
+
     Attributes:
         (класса)
         __category_count (int): Количество созданных объектов `Category`.
