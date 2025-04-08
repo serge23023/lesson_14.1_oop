@@ -46,15 +46,5 @@ def categories_test(product_dict_test):
         Category(
             'test1',
             'description',
-            [Product(**product_dict_test['product1'])])
+            [Product.new_product(product_dict_test['product1'])])
     ].copy()
-
-# @pytest.fixture()
-# def categories_test(product_dict_test):
-#     Category.reset()
-#     return [
-#         Category(
-#             'test1',
-#             'description',
-#             [Product.new_product(product_dict_test['product1'])])
-#     ].copy()
