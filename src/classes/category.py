@@ -25,8 +25,8 @@ class Category(MixinLogger):
 
     __slots__ = ('__name', '__description', '__products')  # Оптимизация использования памяти.
 
-    __category_count = 0
-    __product_count = 0
+    __category_count = 0  # Общий счетчик категорий.
+    __product_count = 0  # Счетчик уникальных товаров.
 
     @classmethod
     @property
@@ -67,12 +67,13 @@ class Category(MixinLogger):
             description (str): Описание категории.
             products (list[Product], optional): Список товаров в категории. По умолчанию — пустой список.
         """
-        self.__name = name
-        self.__description = description
-        self.__products = products if products else []
+        self.__name = name  # Устанавливает название категории.
+        self.__description = description  # Устанавливает описание категории.
+        self.__products = products if products else []  # Сохраняет список товаров или создает пустой список.
 
-        Category.__category_count += 1
-        Category.__product_count += len(set(p.name for p in self.__products))
+        Category.__category_count += 1  # Увеличивает счетчик категорий.
+        Category.__product_count += len(set(p.name for p in self.__products))  # Подсчитывает уникальные товары.
+        self.log_creation()  # Логирует создание категории.
 
         self.log_creation()  # Логирование создания категории.
 
