@@ -6,6 +6,9 @@ class Category(MixinLogger):
     """
     Класс Category представляет категорию товаров.
 
+    Наследует:
+        - MixinLogger: Миксин для логирования объекта.
+
     Attributes:
         __category_count (int): Хранит количество созданных объектов класса Category.
         __product_count (int): Хранит количество уникальных товаров среди всех категорий.
