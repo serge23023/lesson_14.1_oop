@@ -1,11 +1,6 @@
-from classes.mixin_log import MixinCreationLogger
-
-
-class Product(MixinCreationLogger):
+class Product():
     """
     Класс Product представляет товар с именем, описанием, ценой и количеством.
-    Наследует:
-    - MixinCreationLogger: Миксин для логирования создания объекта.
     """
 
     # Использование __slots__ для ограничения атрибутов объекта и оптимизации памяти
@@ -25,7 +20,6 @@ class Product(MixinCreationLogger):
         self.description = description
         self.__price = price  # Установка цены через внутренний атрибут
         self.quantity = quantity
-        self.log_creation()  # Логирует создание объекта
 
     @property
     def price(self):

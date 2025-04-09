@@ -130,3 +130,5 @@ dmypy.json
 .pyre/
 /.flake8
 /src/classes/abstact_product.py
+/src/classes/mixin_log.py
+
