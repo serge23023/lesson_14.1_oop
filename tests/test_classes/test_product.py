@@ -52,6 +52,11 @@ def test_add_product(product_dict_test):
     with pytest.raises(TypeError):
         product1 + "Not a product"
 
+    assert isinstance(product2, Product)
+    assert product2.name == product_dict_test[key_dict2]['name']
+    assert product2.price == product_dict_test[key_dict2]['price']
+    assert product2.quantity == product_dict_test[key_dict2]['quantity']
+
 
 def test_price_setter_negative(capsys):
     """
