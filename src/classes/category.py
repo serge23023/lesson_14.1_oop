@@ -14,6 +14,10 @@ class Category(MixinLogger):
         - `MixinLogger`: Миксин для логирования событий создания объекта.
 
     Attributes:
+        __category_count (int): Количество созданных объектов `Category`.
+        __product_count (int): Количество уникальных товаров среди всех категорий.
+
+    Attributes:
         (класса)
         __category_count (int): Количество созданных объектов `Category`.
         __product_count (int): Количество уникальных товаров среди всех категорий.
@@ -47,7 +51,7 @@ class Category(MixinLogger):
         Возвращает общее количество уникальных товаров среди всех категорий.
 
         Returns:
-            int: Количество уникальных товаров.
+            int: Общее количество уникальных товаров.
         """
         return cls.__product_count
 
@@ -68,18 +72,16 @@ class Category(MixinLogger):
             description (str): Описание категории.
             products (list[Product], optional): Список товаров в категории. По умолчанию — пустой список.
         """
-        self.__name = name  # Устанавливает название категории.
-        self.__description = description  # Устанавливает описание категории.
-        self.__products = products if products else []  # Сохраняет список товаров или создает пустой список.
+        self.__name = name  # Название категории.
+        self.__description = description  # Описание категории.
+        self.__products = products if products else []  # Список товаров (или пустой список).
 
-        Category.__category_count += 1  # Увеличивает счетчик категорий.
-        Category.__product_count += len(set(p.name for p in self.__products))  # Подсчитывает уникальные товары.
-        self.log_creation()  # Логирует создание категории.
+
+        Category.__category_count += 1  # Увеличение общего счётчика категорий.
+        Category.__product_count += len(set(p.name for p in self.__products))  # Подсчёт уникальных товаров.
 
         self.log_creation()  # Логирование создания категории.
 
-        Category.__category_count += 1
-        Category.__product_count += len(set(p.name for p in self.__products))
 
     @property
     def name(self) -> str:
@@ -107,6 +109,7 @@ class Category(MixinLogger):
         Возвращает список товаров в данной категории.
 
         Returns:
+            int: Суммарное количество всех товаров в категории.
             list[Product]: Список продуктов категории.
         """
         return self.__products
@@ -122,7 +125,7 @@ class Category(MixinLogger):
 
     def __str__(self) -> str:
         """
-        Возвращает строковое представление категории.
+        Возвращает строковое представление категории с количеством товаров.
 
         Returns:
             str: Название категории и количество товаров.
@@ -146,7 +149,7 @@ class Category(MixinLogger):
             product (Product): Товар для добавления.
 
         Raises:
-            TypeError: Если объект не является экземпляром `Product`.
+            TypeError: Если переданный объект не является экземпляром `Product`.
         """
         if not isinstance(product, Product):
             raise TypeError("Должен быть объект класса Product")
