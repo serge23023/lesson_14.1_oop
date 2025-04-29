@@ -30,7 +30,6 @@ def test_product(product_dict_test):
     assert product1.price == product_dict_test[key_dict]['price']
     assert product1.quantity == product_dict_test[key_dict]['quantity']
 
-
 def test_add_product(product_dict_test):
     """
     Тестирование сложения двух объектов `Product`.
