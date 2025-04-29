@@ -1,14 +1,10 @@
 from classes.mixin_log import MixinLogger
-from classes.mixin_log import MixinLogger
-from classes.Products_Classes.product import Product
+from classes.product import Product
 
 
 class Category(MixinLogger):
     """
     Класс `Category` представляет категорию товаров.
-
-    Наследует:
-        - `MixinLogger`: Миксин для логирования событий создания объекта.
 
     Наследует:
         - `MixinLogger`: Миксин для логирования событий создания объекта.
@@ -72,8 +68,8 @@ class Category(MixinLogger):
         self.__description = description  # Описание категории.
         self.__products = products if products else []  # Список товаров (или пустой список).
 
-        Category.__category_count += 1  # Увеличение общего счётчика категорий.
-        Category.__product_count += len(set(p.name for p in self.__products))  # Подсчёт уникальных товаров.
+        Category.__category_count += 1
+        Category.__product_count += len(set(p.name for p in self.__products))
 
         self.log_creation()  # Логирование создания категории.
 
@@ -118,7 +114,7 @@ class Category(MixinLogger):
 
     def __str__(self) -> str:
         """
-        Возвращает строковое представление категории с количеством товаров.
+        Возвращает строковое представление категории.
 
         Returns:
             str: Название категории и количество товаров.
