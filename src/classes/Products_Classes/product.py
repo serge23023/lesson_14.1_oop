@@ -1,4 +1,3 @@
-from typing import Optional
 from classes.mixin_log import MixinLogger
 
 
@@ -20,26 +19,21 @@ class Product(MixinLogger):
     __slots__ = ('name', 'description', 'price', 'quantity')  # Оптимизация памяти.
 
     @classmethod
-    def new_product(cls, product_data: dict, product_list: Optional[list] = None) -> Optional['Product']:
+    def edit_product(cls, price: float, quantity: int, product: 'Product') -> None:
         """
-        Создаёт новый объект `Product` или обновляет существующий объект в списке.
+        Обновляет цену и количество товара.
 
         Args:
-            product_data (dict): Данные товара (`name`, `description`, `price`, `quantity`).
-            product_list (list, optional): Список существующих товаров. По умолчанию `None`.
+            price (float): Новая цена товара.
+            quantity (int): Количество для увеличения.
+            product (Product): Объект товара для редактирования.
 
-        Returns:
-            Optional[Product]: Новый объект `Product` или `None`, если товар обновлён.
+        Notes:
+            - Цена устанавливается через соответствующий сеттер.
+            - Количество увеличивается на переданное значение.
         """
-        if product_list is None:
-            product_list = []  # Инициализация пустого списка.
-
-        for product in product_list:
-            if product.name == product_data['name']:  # Проверка на совпадение имени товара.
-                product.price = product_data['price']  # Используем сеттер для обновления цены.
-                product.quantity += product_data['quantity']  # Обновляем количество товара.
-                return None  # Возвращаем `None`, если обновили существующий товар.
-        return cls(**product_data)  # Создаём новый товар, если он уникален.
+        product.price = price  # Используем сеттер для обновления цены.
+        product.quantity += quantity  # Обновляем количество товара.
 
     def __init__(self, name: str, description: str, price: float, quantity: int) -> None:
         """
@@ -77,6 +71,10 @@ class Product(MixinLogger):
 
         Raises:
             ValueError: Если `value` отрицательное или равно нулю.
+
+        Notes:
+            - При попытке понизить цену запрашивается подтверждение от пользователя.
+            - Если цена валидна и выше текущей, устанавливается автоматически.
         """
         if value <= 0:
             print("Ошибка: Цена не должна быть нулевой или отрицательной.")
@@ -90,6 +88,9 @@ class Product(MixinLogger):
         """
         Складывает общую стоимость двух товаров.
 
+        Операция сложения вычисляет общую стоимость всех единиц товара,
+        умножая цену каждого продукта на его количество и суммируя результаты.
+
         Args:
             other (Product): Второй объект `Product`.
 
@@ -99,8 +100,9 @@ class Product(MixinLogger):
         Returns:
             float: Общая стоимость (`price * quantity`) двух товаров.
         """
-        if not isinstance(other, Product):
-            raise TypeError("Операция сложения поддерживается только для объектов Product.")
+        if not isinstance(other, Product) or not issubclass(type(other), type(self)):
+            raise TypeError("Операция сложения поддерживается только для объектов `Product` или его подклассов.")
+
         return self.__price * self.quantity + other.__price * other.quantity
 
     def __str__(self) -> str:
