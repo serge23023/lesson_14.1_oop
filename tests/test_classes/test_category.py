@@ -8,6 +8,23 @@ if __name__ == '__main__':  # pragma: no cover
 
 
 def test_category(categories_test, product_dict_test):
+    """
+    Тест проверяет корректность создания объекта `Category` и его атрибутов.
+
+    Args:
+        categories_test (list[Category]): Список тестовых категорий.
+        product_dict_test (dict): Тестовые данные продуктов.
+
+    Assertions:
+        - Проверка типа объекта категории.
+        - Проверка имени и описания категории.
+        - Проверка типа списка продуктов внутри категории.
+        - Проверка типа первого продукта в списке.
+        - Проверка длины списка продуктов.
+        - Проверка строкового представления категории.
+        - Проверка количества категорий и уникальных продуктов.
+        - Добавление новой категории и проверка обновленного количества категорий.
+    """
     category1 = categories_test[0]
 
     # Проверяем категорию
@@ -22,6 +39,7 @@ def test_category(categories_test, product_dict_test):
     # Проверяем общее количество категорий и уникальных продуктов
     assert Category.category_count == 1
     assert Category.product_count == 1
+    print(category1.products)
 
     # Добавляем новую категорию и проверяем общее количество категорий
     category2 = Category('test2', 'description')
@@ -30,6 +48,20 @@ def test_category(categories_test, product_dict_test):
 
 
 def test_add_product(categories_test, product_dict_test):
+    """
+    Тест проверяет добавление продуктов в категорию.
+
+    Args:
+        categories_test (list[Category]): Список тестовых категорий.
+        product_dict_test (dict): Тестовые данные продуктов.
+
+    Assertions:
+        - Добавление нового продукта и проверка увеличения количества уникальных продуктов.
+        - Проверка наличия нового продукта в списке товаров категории.
+        - Добавление дубликата продукта и проверка количества уникальных товаров.
+        - Добавление нового уникального продукта и проверка увеличения количества уникальных продуктов.
+        - Проверка исключения при попытке добавить объект, который не является `Product`.
+    """
     category = categories_test[0]
 
     # Добавляем продукты в категорию и проверяем общее количество уникальных продуктов и его наличие в списке продуктов
@@ -53,6 +85,16 @@ def test_add_product(categories_test, product_dict_test):
 
 
 # def test_average_price(categories_test):
+#     """
+#     Тест проверяет корректность расчёта средней цены товаров в категории.
+#
+#     Args:
+#         categories_test (list[Category]): Список тестовых категорий.
+#
+#     Assertions:
+#         - Проверка корректного расчёта средней цены товаров.
+#         - Проверка расчёта средней цены после удаления всех товаров.
+#     """
 #     category = categories_test[0]
 #     assert category.average_price() == 1.0
 #     category.products.remove(category.products[0])
