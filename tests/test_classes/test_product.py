@@ -87,6 +87,7 @@ def test_price_setter_lower():
         - Проверка, что цена уменьшается при подтверждении пользователя.
     """
     product = Product('name', 'description', 10.0, 10)
+
     with patch('builtins.input', return_value=''):
         product.price = 5.0
     assert product.price == 10.0
