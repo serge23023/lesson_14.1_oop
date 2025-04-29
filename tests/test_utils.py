@@ -4,26 +4,13 @@ from classes.Products_Classes.product import Product
 from classes.category import Category
 from utils import create_categories
 
-if __name__ == '__main__':  # pragma: no cover
+if __name__ == '__main__':
     pytest.main()
 
 
 def test_create_categories_returns_categories():
     """Проверяет, что функция возвращает экземпляры Category."""
     categories = create_categories()
-    """
-    Проверяет добавление продукта в категорию:
-        - категория остаётся на месте,
-        - глобальный счётчик продуктов увеличивается,
-        - продукт добавлен в список продуктов категории.
-    """
-    test_category = categories_test[0]
-    product_count_before = Category.product_count
-    category_products_before = len(test_category.products)
-
-    Assertions:
-        - Проверка, что каждый созданный объект является экземпляром `Category`.
-    """
     assert all(isinstance(cat, Category) for cat in categories)
 
 
