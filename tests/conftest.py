@@ -11,7 +11,15 @@ from classes.product import Product
 
 @pytest.fixture()
 def mock_json_file(tmp_path):
-    # Создаем временный JSON-файл с корректным содержимым
+    """
+    Создаёт временный JSON-файл с корректным содержимым.
+
+    Args:
+        tmp_path (Path): Временный путь для хранения файлов.
+
+    Returns:
+        Path: Путь к созданному JSON-файлу.
+    """
     data = [{"key": "value"}]
     file_path = tmp_path / "test.json"
     with file_path.open("w", encoding="utf-8") as f:
@@ -21,7 +29,15 @@ def mock_json_file(tmp_path):
 
 @pytest.fixture()
 def invalid_json_file(tmp_path):
-    # Создаем временный JSON-файл с некорректным содержимым
+    """
+    Создаёт временный JSON-файл с некорректным содержимым.
+
+    Args:
+        tmp_path (Path): Временный путь для хранения файлов.
+
+    Returns:
+        Path: Путь к некорректному JSON-файлу.
+    """
     file_path = tmp_path / "invalid.json"
     with file_path.open("w", encoding="utf-8") as f:
         f.write("{invalid_json:}")  # Некорректный JSON
@@ -30,6 +46,12 @@ def invalid_json_file(tmp_path):
 
 @pytest.fixture()
 def product_dict_test():
+    """
+    Возвращает тестовые данные продуктов.
+
+    Returns:
+        dict: Словарь с тестовыми продуктами, содержащий параметры `name`, `description`, `price` и `quantity`.
+    """
     return {
         'product1': {'name': 'name', 'description': 'description', 'price': 1.0, 'quantity': 0},
         'product2': {'name': 'name', 'description': 'description', 'price': 10.0, 'quantity': 10},
@@ -41,6 +63,15 @@ def product_dict_test():
 
 @pytest.fixture()
 def categories_test(product_dict_test):
+    """
+    Создаёт тестовые категории, сбрасывая их счётчики перед созданием.
+
+    Args:
+        product_dict_test (dict): Тестовые данные продуктов.
+
+    Returns:
+        list[Category]: Список тестовых категорий.
+    """
     Category.reset()
     return [
         Category(
