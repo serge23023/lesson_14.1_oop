@@ -16,7 +16,7 @@ class Product(MixinLogger):
         quantity (int): Количество товара.
     """
 
-    __slots__ = ('name', 'description', 'price', 'quantity')  # Оптимизация памяти.
+    __slots__ = ('name', 'description', '__price', 'quantity')  # Оптимизация памяти.
 
     @classmethod
     def edit_product(cls, price: float, quantity: int, product: 'Product') -> None:
@@ -47,7 +47,7 @@ class Product(MixinLogger):
         """
         self.name = name
         self.description = description
-        self.price = price
+        self.__price = price
         self.quantity = quantity
         self.log_creation()  # Логируем создание объекта.
 
