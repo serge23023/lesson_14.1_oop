@@ -1,7 +1,7 @@
 import pytest
 
-from classes.Products_Classes.Product_Iterator import ProductIterator
-from classes.Products_Classes.product import Product
+from classes.Product_Iterator import ProductIterator
+from classes.product import Product
 
 if __name__ == '__main__':
     pytest.main()

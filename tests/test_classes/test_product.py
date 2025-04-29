@@ -80,7 +80,16 @@ def test_price_setter_negative(capsys):
     captured = capsys.readouterr()
 
 def test_create_product_new_price(product_dict_test):
-    # Тестирование создания нового продукта с обновлением цены
+    """
+    Тестирование обновления цены существующего продукта при добавлении нового.
+
+    Args:
+        product_dict_test (dict): Тестовые данные продуктов.
+
+    Assertions:
+        - Проверка, что объект не создаётся при наличии аналогичного товара.
+        - Проверка обновления цены и количества существующего товара.
+    """
     key_dict1 = 'product1'
     key_dict2 = 'product2'
     product1 = Product(**product_dict_test[key_dict1])
@@ -89,21 +98,44 @@ def test_create_product_new_price(product_dict_test):
     assert product1.price == product_dict_test[key_dict2]['price']  # Проверка обновления цены
     assert product1.quantity == product_dict_test[key_dict2]['quantity']  # Проверка обновления количества
 
+    assert isinstance(product2, type(None))
+    assert product1.price == product_dict_test[key_dict2]['price']
+    assert product1.quantity == product_dict_test[key_dict2]['quantity']
+
 
 def test_create_product_existing_price(product_dict_test):
-    # Тестирование создания нового продукта с существующей ценой
+    """
+    Тестирование обновления количества существующего продукта без изменения цены.
+
+    Args:
+        product_dict_test (dict): Тестовые данные продуктов.
+
+    Assertions:
+        - Проверка, что объект не создаётся при наличии аналогичного товара.
+        - Проверка сохранения прежней цены.
+        - Проверка обновления количества товара.
+    """
     key_dict1 = 'product3'
     key_dict2 = 'product2'
     product1 = Product(**product_dict_test[key_dict1])
     product2 = Product.new_product(product_dict_test[key_dict1], [product1])
-    assert isinstance(product2, type(None))  # Ожидается, что новый продукт не будет создан
-    assert product1.price == product_dict_test[key_dict1]['price']  # Проверка сохранения цены
-    # Проверка обновления количества
+
+    assert isinstance(product2, type(None))
+    assert product1.price == product_dict_test[key_dict1]['price']
     assert product1.quantity == product_dict_test[key_dict1]['quantity'] + product_dict_test[key_dict2]['quantity']
 
 
 def test_create_product_new_product(product_dict_test):
-    # Тестирование создания нового продукта
+    """
+    Тестирование создания нового продукта.
+
+    Args:
+        product_dict_test (dict): Тестовые данные продуктов.
+
+    Assertions:
+        - Проверка, что новый продукт создаётся.
+        - Проверка корректности имени, цены и количества нового продукта.
+    """
     key_dict1 = 'product1'
     key_dict2 = 'product4'
     product1 = Product(**product_dict_test[key_dict1])
@@ -113,9 +145,23 @@ def test_create_product_new_product(product_dict_test):
     assert product2.price == product_dict_test[key_dict2]['price']  # Проверка цены
     assert product2.quantity == product_dict_test[key_dict2]['quantity']  # Проверка количества
 
+    assert isinstance(product2, Product)
+    assert product2.name == product_dict_test[key_dict2]['name']
+    assert product2.price == product_dict_test[key_dict2]['price']
+    assert product2.quantity == product_dict_test[key_dict2]['quantity']
+
 
 def test_price_setter_negative(capsys):
-    # Создаем объект Product
+    """
+    Тестирование проверки отрицательной цены.
+
+    Args:
+        capsys: Захват вывода в консоль.
+
+    Assertions:
+        - Проверка сообщения об ошибке при попытке установить отрицательную цену.
+        - Проверка, что цена товара не изменилась.
+    """
     product = Product('name', 'description', 10.0, 10)
 
     # Устанавливаем некорректную цену
@@ -126,7 +172,8 @@ def test_price_setter_negative(capsys):
 
     # Убираем лишние строки из captured.out
     relevant_output = "\n".join(
-        line for line in captured.out.splitlines() if "Ошибка: Цена не должна быть" in line)
+        line for line in captured.out.splitlines() if "Ошибка: Цена не должна быть" in line
+    )
 
     # Проверяем только релевантное сообщение
     assert "Ошибка: Цена не должна быть нулевой или отрицательной." in relevant_output
@@ -136,20 +183,31 @@ def test_price_setter_negative(capsys):
 
 
 def test_price_setter_lower():
-    # Проверка подтверждения понижения цены
+    """
+    Тестирование логики подтверждения понижения цены.
+
+    Assertions:
+        - Проверка, что цена не изменяется без подтверждения пользователя.
+        - Проверка, что цена уменьшается при подтверждении пользователя.
+    """
     product = Product('name', 'description', 10.0, 10)
+
     with patch('builtins.input', return_value=''):
-        product.price = 5.0  # Вводим меньшую цену без подтверждения
-    # Проверяем, что цена не изменилась
+        product.price = 5.0
     assert product.price == 10.0
-    # Подтверждаем понижение цены
+
     with patch('builtins.input', return_value='y'):
         product.price = 5.0
     assert product.price == 5.0
 
 
 def test_price_setter_raise():
-    # Проверка увеличения цены
+    """
+    Тестирование увеличения цены.
+
+    Assertions:
+        - Проверка корректности увеличения цены.
+    """
     product = Product('name', 'description', 10.0, 10)
     product.price = 15.0
     assert product.price == 15.0

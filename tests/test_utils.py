@@ -11,6 +11,12 @@ if __name__ == '__main__':  # pragma: no cover
 def test_create_categories_returns_categories():
     """Проверяет, что функция возвращает экземпляры Category."""
     categories = create_categories()
+    """
+    Тестирование функции `create_categories`.
+
+    Assertions:
+        - Проверка, что каждый созданный объект является экземпляром `Category`.
+    """
     assert all(isinstance(cat, Category) for cat in categories)
 
 
