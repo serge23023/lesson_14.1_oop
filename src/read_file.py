@@ -6,6 +6,9 @@ def open_json(file_name: str, recursive: bool = False) -> list:
     """
     Открывает JSON-файл, начиная поиск от корневой директории проекта.
 
+    Функция выполняет поиск указанного файла и загружает его содержимое. Если файл не найден,
+    вызывается исключение `FileNotFoundError`. Если файл содержит некорректный JSON, вызывается `JSONDecodeError`.
+
     Args:
         file_name (str): Название файла.
         recursive (bool, optional): Определяет, искать ли файл рекурсивно в подкаталогах. По умолчанию False.
@@ -34,6 +37,9 @@ def open_json(file_name: str, recursive: bool = False) -> list:
 def find_file(filename: str, search_dir: Path, recursive: bool = False) -> Path:
     """
     Находит файл в указанной директории или её подкаталогах.
+
+    Если `recursive=True`, выполняется поиск во всех вложенных папках. В противном случае поиск ограничен
+    указанной директорией. Если файл не найден, вызывается `FileNotFoundError`.
 
     Args:
         filename (str): Название файла.
