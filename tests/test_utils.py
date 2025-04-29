@@ -11,12 +11,6 @@ if __name__ == '__main__':
 def test_create_categories_returns_categories():
     """Проверяет, что функция возвращает экземпляры Category."""
     categories = create_categories()
-    """
-    Тестирование функции `create_categories`.
-
-    Assertions:
-        - Проверка, что каждый созданный объект является экземпляром `Category`.
-    """
     assert all(isinstance(cat, Category) for cat in categories)
 
 
@@ -38,26 +32,9 @@ def test_add_product_updates_category_and_count(categories_test):
         quantity=5
     )
 
-# def test_add_property_to_category(categories_test):
-#     """
-#     Тестирование добавления нового продукта в категорию.
-#
-#     Args:
-#         categories_test (list[Category]): Список тестовых категорий.
-#
-#     Assertions:
-#         - Проверка, что количество категорий остаётся неизменным.
-#         - Проверка, что количество уникальных продуктов увеличивается после добавления нового продукта.
-#     """
-#     initial_total_unique_products = Category.product_count
-#     add_product(
-#         categories_test,
-#         'test1',
-#         {
-#             'name': 'name1',
-#             'description': 'description',
-#             'price': 0.0,
-#             'quantity': 0}
-#     )
-#     assert Category.category_count == 1
-#     assert Category.product_count == initial_total_unique_products + 1
+    test_category.add_product(test_product)
+
+    assert Category.category_count == len(categories_test)
+    assert Category.product_count == product_count_before + 1
+    assert len(test_category.products) == category_products_before + 1
+    assert test_category.products[-1] == test_product
