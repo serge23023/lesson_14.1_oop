@@ -1,3 +1,5 @@
+<<<<<<<< HEAD:src/classes/product.py
+========
 from classes.mixin_log import MixinLogger
 
 
@@ -122,3 +124,4 @@ class Product(MixinLogger):
             str: Представление объекта для разработчиков.
         """
         return f"{self.__class__.__name__}('{self.name}', '{self.description}', {self.price}, {self.quantity})"
+>>>>>>>> b422a6a (working on a task 16.1):src/classes/Products_Classes/product.py
