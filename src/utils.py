@@ -1,5 +1,5 @@
 from classes.category import Category
-from classes.product import Product
+from classes.Products_Classes.product import Product
 from read_file import open_json
 
 
@@ -13,10 +13,15 @@ def create_categories():
     Returns:
         list[Category]: Список объектов `Category` с загруженными товарами.
     """
-    categories = []  # Инициализация списка категорий
+    categories = []
+
     for item in open_json('products.json', True):  # Чтение данных из JSON-файла
-        # Создание объектов Product для каждого товара в категории
-        item['products'] = [Product(**product) for product in item['products']]
-        # Создание объекта Category и добавление его в список категорий
-        categories.append(Category(**item))
-    return categories  # Возвращает список категорий с товарами
+        products = [Product(**product) for product in item.pop('products', [])]  # Создаём объекты `Product`
+        category = Category(**item)  # Создаём объект `Category`
+
+        for product in products:
+            category.add_product(product)  # Добавляем товары в категорию
+
+        categories.append(category)
+
+    return categories

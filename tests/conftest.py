@@ -3,10 +3,13 @@ import os
 import sys
 import pytest
 
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
 from classes.category import Category
-from classes.product import Product
+from classes.Products_Classes.product import Product
+from classes.Products_Classes.Lawn_Grass import LawnGrass
+from classes.Products_Classes.Smartphone import Smartphone
 
 
 @pytest.fixture()
@@ -77,5 +80,44 @@ def categories_test(product_dict_test):
         Category(
             'test1',
             'description',
-            [Product.new_product(product_dict_test['product1'])])
+            [Product(**product_dict_test['product1'])])
     ].copy()
+
+
+@pytest.fixture()
+def lawn_grass_test():
+    """
+    Создаёт тестовый объект `LawnGrass`.
+
+    Returns:
+        LawnGrass: Тестовый экземпляр класса `LawnGrass`.
+    """
+    return LawnGrass(
+        "Кентукки Блюграсс",
+        "Трава для газонов",
+        5,
+        100,
+        "USA",
+        "14 дней",
+        "Зеленый"
+    )
+
+
+@pytest.fixture()
+def smartphone_test():
+    """
+    Создаёт тестовый объект `Smartphone`.
+
+    Returns:
+        Smartphone: Тестовый экземпляр класса `Smartphone`.
+    """
+    return Smartphone(
+        "Samsung Galaxy C23 Ultra",
+        "256GB, Серый цвет, 200MP камера",
+        180000.0,
+        5,
+        "Флагман",
+        "C23 Ultra",
+        "256GB",
+        "Серый"
+    )
