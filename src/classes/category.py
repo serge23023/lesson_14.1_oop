@@ -4,20 +4,23 @@ from classes.product import Product
 
 class Category(MixinLogger):
     """
-    Класс Category представляет категорию товаров.
+    Класс `Category` представляет категорию товаров.
 
     Наследует:
-        - MixinLogger: Миксин для логирования объекта.
+        - `MixinLogger`: Миксин для логирования объекта.
 
     Attributes:
-        __category_count (int): Хранит количество созданных объектов класса Category.
-        __product_count (int): Хранит количество уникальных товаров среди всех категорий.
+        __category_count (int): Количество созданных объектов `Category`.
+        __product_count (int): Количество уникальных товаров среди всех категорий.
+
+    Attributes:
+        (экземпляра)
         __name (str): Название категории.
         __description (str): Описание категории.
         __products (list[Product]): Список товаров, принадлежащих категории.
     """
 
-    __slots__ = ('__name', '__description', '__products')  # Оптимизация памяти путем ограничения допустимых атрибутов.
+    __slots__ = ('__name', '__description', '__products')  # Ограничение допустимых атрибутов для оптимизации памяти.
 
     __category_count = 0  # Общий счетчик категорий.
     __product_count = 0  # Счетчик уникальных товаров.
@@ -29,7 +32,7 @@ class Category(MixinLogger):
         Возвращает количество созданных категорий.
 
         Returns:
-            int: Количество категорий.
+            int: Общее количество категорий.
         """
         return cls.__category_count
 
@@ -37,28 +40,38 @@ class Category(MixinLogger):
     @property
     def product_count(cls):
         """
-        Возвращает количество уникальных товаров.
+        Возвращает количество уникальных товаров среди всех категорий.
 
         Returns:
-            int: Количество уникальных товаров.
+            int: Общее количество уникальных товаров.
         """
         return cls.__product_count
 
+    @classmethod
+    def reset(cls):
+        """
+        Сбрасывает счётчики категорий и товаров.
+        """
+        cls.__category_count = 0
+        cls.__product_count = 0
+
     def __init__(self, name: str, description: str, products: list[Product] = None):
         """
-        Инициализирует объект категории.
+        Инициализирует объект `Category`, добавляя переданные товары.
 
         Args:
             name (str): Название категории.
             description (str): Описание категории.
-            products (list[Product], optional): Список товаров. По умолчанию пустой список.
+            products (list[Product], optional): Список товаров в категории. По умолчанию пустой список.
         """
-        self.__name = name  # Устанавливает название категории.
-        self.__description = description  # Устанавливает описание категории.
-        self.__products = products if products else []  # Сохраняет список товаров или создает пустой список.
-        Category.__category_count += 1  # Увеличивает счетчик категорий.
-        Category.__product_count += len(set(p.name for p in self.__products))  # Подсчитывает уникальные товары.
-        self.log_creation()  # Логирует создание категории.
+        self.__name = name  # Название категории.
+        self.__description = description  # Описание категории.
+        self.__products = products if products else []  # Список товаров (или пустой список).
+
+        Category.__category_count += 1  # Увеличение общего счётчика категорий.
+        Category.__product_count += len(set(p.name for p in self.__products))  # Подсчёт уникальных товаров.
+
+        self.log_creation()  # Логирование создания категории.
 
     @property
     def products(self):
@@ -66,7 +79,7 @@ class Category(MixinLogger):
         Возвращает список товаров в категории.
 
         Returns:
-            list[Product]: Список товаров.
+            list[Product]: Список товаров категории.
         """
         return self.__products
 
@@ -92,47 +105,45 @@ class Category(MixinLogger):
 
     def __len__(self):
         """
-        Возвращает количество всех товаров в категории (с учетом их количества).
+        Возвращает общее количество товаров в категории, включая их количество.
 
         Returns:
-            int: Количество товаров.
+            int: Суммарное количество всех товаров в категории.
         """
-        count = 0
-        for product in self.__products:  # Перебирает все товары в категории.
-            count += product.quantity  # Суммирует количество каждого товара.
-        return count
+        return sum(product.quantity for product in self.__products)
 
     def __str__(self):
         """
-        Возвращает строковое представление категории.
+        Возвращает строковое представление категории с количеством товаров.
 
         Returns:
-            str: Строка с названием и количеством товаров.
+            str: Название категории и количество товаров.
         """
-        return f"\n{self.__name}, количество продуктов: {len(self)} шт."  # Форматирует строку с данными категории.
+        return f"\n{self.__name}, количество продуктов: {len(self)} шт."
 
     def add_product(self, product: Product):
         """
-        Добавляет товар в категорию и обновляет количество уникальных товаров.
+        Добавляет товар в категорию, обновляя счётчик уникальных товаров.
 
         Args:
             product (Product): Товар для добавления.
 
         Raises:
-            TypeError: Если объект не является экземпляром Product.
+            TypeError: Если переданный объект не является экземпляром `Product`.
         """
-        if not isinstance(product, Product):  # Проверяет, что добавляемый объект — это Product.
+        if not isinstance(product, Product):
             raise TypeError("Должен быть объект класса Product")
 
-        if product.name not in (p.name for p in self.__products):  # Если товар уникален, увеличивает счетчик.
+        if product.name not in (p.name for p in self.__products):  # Проверка уникальности товара.
             Category.__product_count += 1
-        self.__products.append(product)  # Добавляет товар в список.
+
+        self.__products.append(product)  # Добавление товара в список.
 
     def __repr__(self):
         """
         Возвращает техническое представление объекта категории.
 
         Returns:
-            str: Техническая строка представления.
+            str: Техническое представление категории для отладки.
         """
-        return f'{self.__class__.__name__}({self.__name}, {self.__description}, {self.__products})'
+        return f"{self.__class__.__name__}('{self.__name}', '{self.__description}', {self.__products})"
