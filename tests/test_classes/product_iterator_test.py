@@ -1,7 +1,7 @@
 import pytest
 
-from classes.Products_Classes.Product_Iterator import ProductIterator
-from classes.Products_Classes.product import Product
+from classes.Product_Iterator import ProductIterator
+from classes.product import Product
 
 if __name__ == '__main__':  # pragma: no cover
     pytest.main()
@@ -20,7 +20,7 @@ def test_product_iterator(categories_test, product_dict_test):
         - Проверка, что `StopIteration` вызывается после полного прохода по списку.
     """
     products = categories_test[0].products
-    products.append(Product(**product_dict_test['product4']))  # Добавляем дополнительный товар для теста
+    products.append(Product(**product_dict_test['product4']))
     iterator = ProductIterator(products).__iter__()
 
     # Проверяем, что итератор возвращает продукты в правильном порядке
