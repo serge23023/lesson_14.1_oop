@@ -7,7 +7,7 @@ class Category(MixinLogger):
     Класс `Category` представляет категорию товаров.
 
     Наследует:
-        - MixinLogger: Миксин для логирования объекта.
+        - MixinLogger: Миксин для логирования событий создания объекта.
 
     Attributes:
         (класса)
