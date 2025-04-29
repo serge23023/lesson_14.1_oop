@@ -1,8 +1,7 @@
-from classes.mixin_log import MixinCreationLogger
 from classes.product import Product
 
 
-class Category(MixinCreationLogger):
+class Category():
     """
     Класс Category представляет категорию товаров.
 
@@ -48,14 +47,6 @@ class Category(MixinCreationLogger):
         """
         return cls.__product_count
 
-    @classmethod
-    def reset(cls):
-        """
-        Сбрасывает счетчики категорий и товаров.
-        """
-        cls.__category_count = 0
-        cls.__product_count = 0
-
     def __init__(self, name: str, description: str, products: list[Product] = None):
         """
         Инициализирует объект категории.
@@ -70,7 +61,6 @@ class Category(MixinCreationLogger):
         self.__products = products if products else []
         Category.__category_count += 1
         Category.__product_count += len(set(p.name for p in self.__products))
-        self.log_creation()
 
     @property
     def products(self):
