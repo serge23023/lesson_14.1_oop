@@ -167,6 +167,27 @@ for product in ProductIterator(category):
     print(product)
 ```
 
+### Использование `__add__`
+Сложите два товара, чтобы получить общую стоимость всех единиц товара:
+```python
+product_a = Product("Товар A", "Описание", 100, 10)
+product_b = Product("Товар B", "Описание", 200, 2)
+total_cost = product_a + product_b  # 1400
+print(total_cost)
+```
+
+### Использование итератора для товаров категории
+Перебирайте товары одной категории:
+```python
+from classes.category import Category
+from utils.product_iterator import ProductIterator
+
+category = Category("Электроника", "Смартфоны и гаджеты", products_list)
+
+for product in ProductIterator(category):
+    print(product)
+```
+
 ---
 
 ## Тестирование
