@@ -43,7 +43,7 @@ class Category(MixinLogger):
         Возвращает общее количество уникальных товаров среди всех категорий.
 
         Returns:
-            int: Общее количество уникальных товаров.
+            int: Количество уникальных товаров.
         """
         return cls.__product_count
 
@@ -115,7 +115,7 @@ class Category(MixinLogger):
 
     def __str__(self) -> str:
         """
-        Возвращает строковое представление категории с количеством товаров.
+        Возвращает строковое представление категории.
 
         Returns:
             str: Название категории и количество товаров.
@@ -139,7 +139,7 @@ class Category(MixinLogger):
             product (Product): Товар для добавления.
 
         Raises:
-            TypeError: Если переданный объект не является экземпляром `Product`.
+            TypeError: Если объект не является экземпляром `Product`.
         """
         if not isinstance(product, Product):
             raise TypeError("Должен быть объект класса Product")
