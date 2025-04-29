@@ -177,7 +177,9 @@ print(total_cost)
 ```
 
 ### Использование итератора для товаров категории
-Перебирайте товары одной категории:
+
+Перебор товаров одной категории:
+
 ```python
 from classes.category import Category
 from utils.product_iterator import ProductIterator
