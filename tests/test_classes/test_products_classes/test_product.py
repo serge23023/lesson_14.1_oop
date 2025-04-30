@@ -4,7 +4,7 @@ import pytest
 
 from classes.product import Product
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     pytest.main()
 
 
