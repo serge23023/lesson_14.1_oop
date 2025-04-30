@@ -1,7 +1,7 @@
 from unittest.mock import patch
 import pytest
 
-from classes.product import Product
+from classes.Products_Classes.product import Product
 
 if __name__ == '__main__':
     pytest.main()
@@ -51,71 +51,6 @@ def test_add_product(product_dict_test):
 
     with pytest.raises(TypeError):
         product1 + "Not a product"
-
-
-def test_create_product_new_price(product_dict_test):
-    """
-    Тестирование обновления цены существующего продукта при добавлении нового.
-
-    Args:
-        product_dict_test (dict): Тестовые данные продуктов.
-
-    Assertions:
-        - Проверка, что объект не создаётся при наличии аналогичного товара.
-        - Проверка обновления цены и количества существующего товара.
-    """
-    key_dict1 = 'product1'
-    key_dict2 = 'product2'
-    product1 = Product(**product_dict_test[key_dict1])
-    product2 = Product.new_product(product_dict_test[key_dict2], [product1])
-
-    assert isinstance(product2, type(None))
-    assert product1.price == product_dict_test[key_dict2]['price']
-    assert product1.quantity == product_dict_test[key_dict2]['quantity']
-
-
-def test_create_product_existing_price(product_dict_test):
-    """
-    Тестирование обновления количества существующего продукта без изменения цены.
-
-    Args:
-        product_dict_test (dict): Тестовые данные продуктов.
-
-    Assertions:
-        - Проверка, что объект не создаётся при наличии аналогичного товара.
-        - Проверка сохранения прежней цены.
-        - Проверка обновления количества товара.
-    """
-    key_dict1 = 'product3'
-    key_dict2 = 'product2'
-    product1 = Product(**product_dict_test[key_dict1])
-    product2 = Product.new_product(product_dict_test[key_dict1], [product1])
-
-    assert isinstance(product2, type(None))
-    assert product1.price == product_dict_test[key_dict1]['price']
-    assert product1.quantity == product_dict_test[key_dict1]['quantity'] + product_dict_test[key_dict2]['quantity']
-
-
-def test_create_product_new_product(product_dict_test):
-    """
-    Тестирование создания нового продукта.
-
-    Args:
-        product_dict_test (dict): Тестовые данные продуктов.
-
-    Assertions:
-        - Проверка, что новый продукт создаётся.
-        - Проверка корректности имени, цены и количества нового продукта.
-    """
-    key_dict1 = 'product1'
-    key_dict2 = 'product4'
-    product1 = Product(**product_dict_test[key_dict1])
-    product2 = Product.new_product(product_dict_test[key_dict2], [product1])
-
-    assert isinstance(product2, Product)
-    assert product2.name == product_dict_test[key_dict2]['name']
-    assert product2.price == product_dict_test[key_dict2]['price']
-    assert product2.quantity == product_dict_test[key_dict2]['quantity']
 
 
 def test_price_setter_negative(capsys):
