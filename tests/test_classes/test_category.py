@@ -17,7 +17,7 @@ def test_category(categories_test, product_dict_test):
     assert isinstance(category1.products, list)
     assert isinstance(category1.products[0], Product)
     assert len(category1) == 0
-    assert repr(category1) == f"{category1}"
+    assert str(category1) == f"\ntest1, количество продуктов: {len(category1)} шт."
 
     # Проверяем общее количество категорий и уникальных продуктов
     assert Category.category_count == 1

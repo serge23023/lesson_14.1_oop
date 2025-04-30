@@ -17,7 +17,7 @@ class Product(MixinLogger):
     """
 
     # Оптимизация памяти: ограничиваем атрибуты экземпляра только перечисленными
-    __slots__ = ('name', 'description', 'price', 'quantity')
+    __slots__ = ('name', 'description', '__price', 'quantity')
 
     @classmethod
     def new_product(cls, product_data: dict, product_list: Optional[list] = None) -> Optional['Product']:

@@ -129,5 +129,3 @@ dmypy.json
 # Pyre type checker
 .pyre/
 /.flake8
-/src/classes/mixin_log.py
-

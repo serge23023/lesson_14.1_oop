@@ -41,6 +41,7 @@ def product_dict_test():
 
 @pytest.fixture()
 def categories_test(product_dict_test):
+    Category.reset()
     return [
         Category(
             'test1',
