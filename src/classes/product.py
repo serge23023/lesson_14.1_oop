@@ -56,7 +56,7 @@ class Product(MixinLogger):
         """
         self.name = name
         self.description = description
-        self.price = price
+        self.__price = price  # Установка цены через внутренний атрибут
         self.quantity = quantity
         self.log_creation()  # Логируем создание объекта через миксин.
 
