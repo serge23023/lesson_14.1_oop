@@ -4,7 +4,7 @@ import pytest
 
 from read_file import open_json
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     pytest.main()
 
 
