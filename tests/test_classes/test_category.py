@@ -22,8 +22,6 @@ def test_category(categories_test, product_dict_test):
     # Проверяем общее количество категорий и уникальных продуктов
     assert Category.category_count == 1
     assert Category.product_count == 1
-    print("______---------")
-    print(category1.products)
 
     # Добавляем новую категорию и проверяем общее количество категорий
     category2 = Category('test2', 'description')
