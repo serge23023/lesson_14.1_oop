@@ -68,10 +68,12 @@ class Category(MixinLogger):
         self.__description = description
         self.__products = products if products else []
 
+
         Category.__category_count += 1
         Category.__product_count += len(set(p.name for p in self.__products))
 
         self.log_creation()  # Логирование создания категории.
+
 
     @property
     def name(self) -> str:
