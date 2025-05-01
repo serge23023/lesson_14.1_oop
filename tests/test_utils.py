@@ -4,7 +4,7 @@ from classes.Products_Classes.product import Product
 from classes.category import Category
 from utils import create_categories
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     pytest.main()
 
 

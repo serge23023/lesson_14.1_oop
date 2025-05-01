@@ -1,5 +1,3 @@
-<<<<<<<< HEAD:src/classes/product.py
-========
 from classes.mixin_log import MixinLogger
 
 
