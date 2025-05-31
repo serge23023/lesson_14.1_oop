@@ -3,30 +3,30 @@ import pytest
 from classes.Products_Classes.Product_Iterator import ProductIterator
 from classes.Products_Classes.product import Product
 
+
 if __name__ == '__main__':  # pragma: no cover
     pytest.main()
 
 
-def test_product_iterator(categories_test, product_dict_test):
+def test_product_iterator(categories_test, product_xiaomi):
     """
     Тестирование итератора `ProductIterator`.
 
     Args:
-        categories_test (list[Category]): Список тестовых категорий.
-        product_dict_test (dict): Тестовые данные продуктов.
+        categories_test (Category): Категория с товарами.
+        product_xiaomi (dict): Дополнительный товар.
 
     Assertions:
-        - Проверка, что итератор корректно перебирает продукты в правильном порядке.
-        - Проверка, что `StopIteration` вызывается после полного прохода по списку.
+        - Проверка корректного порядка итерации.
+        - Проверка генерации StopIteration после завершения.
     """
-    products = categories_test[0].products
-    products.append(Product(**product_dict_test['product4']))  # Добавляем дополнительный товар для теста
-    iterator = ProductIterator(products).__iter__()
+    products = categories_test.products
+    products.append(Product(**product_xiaomi))  # добавляем второй товар
 
-    # Проверяем, что итератор возвращает продукты в правильном порядке
+    iterator = iter(ProductIterator(products))
+
     for i in range(len(products)):
         assert next(iterator) == products[i]
 
-    # Проверяем, что итератор генерирует исключение StopIteration после прохода по всем продуктам
     with pytest.raises(StopIteration):
         next(iterator)

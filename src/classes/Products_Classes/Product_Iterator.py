@@ -1,46 +1,49 @@
+from classes.Products_Classes.product import Product
+
+
 class ProductIterator:
+    """Итератор для перебора списка товаров категории.
+
+    Attributes:
+        products (list[Product]): Список товаров.
+        __index (int): Текущий индекс при итерации.
     """
-    Итератор для перебора списка продуктов в категории.
 
-    Attributes (экземпляра):
-        product (list): Список товаров, доступных в категории.
-        __index (int): Текущий индекс для итерации.
-    """
+    __slots__ = ("products", "__index")
 
-    __slots__ = ('product', '__index')
-
-    def __init__(self, product: list):
+    def __init__(self, products: list[Product]) -> None:
         """
-        Инициализирует объект итератора для списка продуктов.
+        Инициализирует итератор для списка товаров.
 
         Args:
-            product (list): Список товаров для перебора.
+            products (list[Product]): Список товаров для перебора.
         """
-        self.product = product
+        self.products = products
+        self.__index = 0
 
-    def __iter__(self):
+    def __iter__(self) -> "ProductIterator":
         """
-        Возвращает сам объект итератора.
+        Возвращает сам итератор (объект-итератор).
 
         Returns:
-            CategoryIterator: Сам итератор.
+            ProductIterator: Текущий итератор.
         """
         self.__index = 0
         return self
 
-    def __next__(self):
+    def __next__(self) -> Product:
         """
-        Возвращает следующий продукт из списка.
+        Возвращает следующий товар из списка.
 
         Returns:
-            Product: Следующий товар из списка.
+            Product: Следующий товар в последовательности.
 
         Raises:
-            StopIteration: Если достигнут конец списка продуктов.
+            StopIteration: Если достигнут конец списка.
         """
-        if self.__index < len(self.product):
-            product = self.product[self.__index]
+        if self.__index < len(self.products):
+            product = self.products[self.__index]
             self.__index += 1
             return product
-        else:
-            raise StopIteration
+
+        raise StopIteration

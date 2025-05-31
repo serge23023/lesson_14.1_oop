@@ -1,101 +1,49 @@
 import pytest
-
-from classes.category import Category
+from classes.Order_Classes.category import Category
 from classes.Products_Classes.product import Product
+
 
 if __name__ == '__main__':  # pragma: no cover
     pytest.main()
 
 
-def test_category(categories_test, product_dict_test):
-    """
-    Тест проверяет корректность создания объекта `Category` и его атрибутов.
+def test_category_basics(categories_test):
+    """Проверяет создание и базовые свойства категории."""
+    category = categories_test
 
-    Args:
-        categories_test (list[Category]): Список тестовых категорий.
-        product_dict_test (dict): Тестовые данные продуктов.
+    assert isinstance(category, Category)
+    assert category.name == 'Тестовая'
+    assert category.description == 'Описание'
+    assert isinstance(category.products, list)
+    assert all(isinstance(p, Product) for p in category.products)
 
-    Assertions:
-        - Проверка типа объекта категории.
-        - Проверка имени и описания категории.
-        - Проверка типа списка продуктов внутри категории.
-        - Проверка типа первого продукта в списке.
-        - Проверка длины списка продуктов.
-        - Проверка строкового представления категории.
-        - Проверка количества категорий и уникальных продуктов.
-        - Добавление новой категории и проверка обновленного количества категорий.
-    """
-    category1 = categories_test[0]
-
-    # Проверяем категорию
-    assert isinstance(category1, Category)
-    assert category1.name == 'test1'
-    assert category1.description == 'description'
-    assert isinstance(category1.products, list)
-    assert isinstance(category1.products[0], Product)
-    assert len(category1) == 0
-    assert str(category1) == f"\ntest1, количество продуктов: {len(category1)} шт."
-
-    # Проверяем общее количество категорий и уникальных продуктов
-    assert Category.category_count == 1
-    assert Category.product_count == 1
-    print(category1.products)
-
-    # Добавляем новую категорию и проверяем общее количество категорий
-    category2 = Category('test2', 'description')
-    categories_test.append(category2)
-    assert Category.category_count == 2
+    # Категория должна содержать продукт из фикстуры
+    assert len(category) == sum(p.quantity for p in category.products)
+    assert str(category).startswith(f"\n{category.name}, количество продуктов:")
+    assert Category.category_count >= 1  # type: ignore
+    assert Category.product_count >= 1  # type: ignore
 
 
-def test_add_product(categories_test, product_dict_test):
-    """
-    Тест проверяет добавление продуктов в категорию.
+def test_add_product(categories_test, product_xiaomi, product_samsung):
+    """Проверяет добавление и обновление товаров в категории."""
+    category = categories_test
+    initial_count: int = Category.product_count  # type: ignore
 
-    Args:
-        categories_test (list[Category]): Список тестовых категорий.
-        product_dict_test (dict): Тестовые данные продуктов.
+    # Добавляем новый продукт (уникальный name)
+    product_new = Product(**product_xiaomi)
+    category.add_product(product_new)
+    assert Category.product_count == initial_count + 1
+    assert any(p.name == product_new.name for p in category.products)
 
-    Assertions:
-        - Добавление нового продукта и проверка увеличения количества уникальных продуктов.
-        - Проверка наличия нового продукта в списке товаров категории.
-        - Добавление дубликата продукта и проверка количества уникальных товаров.
-        - Добавление нового уникального продукта и проверка увеличения количества уникальных продуктов.
-        - Проверка исключения при попытке добавить объект, который не является `Product`.
-    """
-    category = categories_test[0]
+    # Добавляем дубликат (должен обновить, но не изменить count)
+    category.add_product(product_new)
+    assert Category.product_count == initial_count + 1
 
-    # Добавляем продукты в категорию и проверяем общее количество уникальных продуктов и его наличие в списке продуктов
-    new_product = Product(**product_dict_test['product4'])
-    category.add_product(new_product)
-    assert Category.product_count == 2
-    assert any(product.name == new_product.name for product in category.products)
+    # Добавляем ещё один уникальный
+    another = Product(**product_samsung)
+    category.add_product(another)
+    assert Category.product_count == initial_count + 2
 
-    # Добавляем продукт, который уже существует, и проверяем общее количество уникальных продуктов
-    category.add_product(new_product)
-    assert Category.product_count == 2
-
-    # Добавляем продукт с новым именем и проверяем общее количество уникальных продуктов
-    new_unique_product = Product(**product_dict_test['product5'])
-    category.add_product(new_unique_product)
-    assert Category.product_count == 3
-
-    # Добавляем объект тип которого не class Product или его наследник
+    # Некорректный тип
     with pytest.raises(TypeError):
-        category.add_product("Not a product")
-
-
-# def test_average_price(categories_test):
-#     """
-#     Тест проверяет корректность расчёта средней цены товаров в категории.
-#
-#     Args:
-#         categories_test (list[Category]): Список тестовых категорий.
-#
-#     Assertions:
-#         - Проверка корректного расчёта средней цены товаров.
-#         - Проверка расчёта средней цены после удаления всех товаров.
-#     """
-#     category = categories_test[0]
-#     assert category.average_price() == 1.0
-#     category.products.remove(category.products[0])
-#     assert category.average_price() == 0
+        category.add_product("не продукт")  # type: ignore

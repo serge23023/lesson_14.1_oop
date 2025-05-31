@@ -3,49 +3,59 @@ from classes.Products_Classes.product import Product
 
 
 class Smartphone(Product, MixinLogger):
-    """
-    Класс `Smartphone` представляет собой конкретный товар — смартфон,
-    унаследованный от класса `Product` и `MixinLogger`.
-
-    Наследует:
-        - `Product`: Базовый класс товара с общими атрибутами.
-        - `MixinLogger`: Миксин для логирования объекта.
+    """Класс, представляющий смартфон как товар.
 
     Attributes:
-        (экземпляра)
-        efficiency (str): Энергоэффективность смартфона.
-        model (str): Модель смартфона.
+        efficiency (str): Энергоэффективность.
+        model (str): Модель устройства.
         memory (str): Объём встроенной памяти.
-        color (str): Цвет устройства.
+        color (str): Цвет корпуса.
     """
 
-    __slots__ = ('efficiency', 'model', 'memory', 'color')  # Оптимизация использования памяти.
-
-    def __init__(self, name, description, price, quantity, efficiency, model, memory, color):
+    def __init__(
+        self,
+        name: str,
+        description: str,
+        price: float,
+        quantity: int,
+        efficiency: str,
+        model: str,
+        memory: str,
+        color: str,
+    ) -> None:
         """
-        Инициализирует объект `Smartphone`.
+        Инициализирует объект смартфона.
 
         Args:
-            name (str): Название товара.
-            description (str): Описание товара.
-            price (float): Цена товара.
-            quantity (int): Количество товара.
-            efficiency (str): Энергоэффективность устройства.
-            model (str): Модель смартфона.
+            name (str): Название.
+            description (str): Описание.
+            price (float): Цена.
+            quantity (int): Количество.
+            efficiency (str): Энергоэффективность.
+            model (str): Модель устройства.
             memory (str): Объём встроенной памяти.
             color (str): Цвет корпуса.
         """
+        super().__init__(name, description, price, quantity)
         self.efficiency = efficiency
         self.model = model
         self.memory = memory
         self.color = color
-        super().__init__(name, description, price, quantity)
 
-    def __repr__(self):
-        """
-        Возвращает техническое представление объекта.
+        if self.__class__ is Smartphone:
+            self.log_creation()
 
-        Returns:
-            str: Представление объекта для разработчиков с учётом специфичных атрибутов смартфона.
-        """
-        return f"{Product.__repr__(self)}, '{self.efficiency}', '{self.model}', '{self.memory}', '{self.color}'"
+    def __str__(self) -> str:
+        """Упрощённое представление смартфона для пользователя."""
+        return (
+            f"{self.name} ({self.model}, {self.memory}, {self.color}) — "
+            f"{self.price} руб., в наличии: {self.quantity} шт."
+        )
+
+    def __repr__(self) -> str:
+        """Техническое представление смартфона."""
+        base = super().__repr__()
+        return (
+            f"{base}, '{self.efficiency}', "
+            f"'{self.model}', '{self.memory}', '{self.color}'"
+        )
