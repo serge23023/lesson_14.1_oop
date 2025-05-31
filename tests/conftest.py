@@ -6,11 +6,10 @@ import pytest
 # Добавляем src в sys.path для корректного импорта
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
-from classes.Order_Classes.category import Category
-from classes.Order_Classes.order import Order
-from classes.Products_Classes.product import Product
-from classes.Products_Classes.Smartphone import Smartphone
-from classes.Products_Classes.Lawn_Grass import LawnGrass
+from classes.Order_Classes.category import Category  # noqa: E402
+from classes.Products_Classes.product import Product  # noqa: E402
+from classes.Products_Classes.Smartphone import Smartphone  # noqa: E402
+from classes.Products_Classes.Lawn_Grass import LawnGrass  # noqa: E402
 
 
 @pytest.fixture()

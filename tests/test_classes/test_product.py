@@ -42,7 +42,7 @@ def test_product_addition_type_error(product_iphone):
     """Проверка ошибки при сложении с несовместимым типом."""
     p = Product(**product_iphone)
     with pytest.raises(TypeError):
-        _ = p + "NotAProduct"
+        _ = p + "NotAProduct"  # type: ignore
 
 
 def test_product_equality_true(product_iphone):
