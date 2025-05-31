@@ -3,46 +3,52 @@ from classes.Products_Classes.product import Product
 
 
 class LawnGrass(Product, MixinLogger):
-    """
-    Класс `LawnGrass` представляет газонную траву как продукт.
-
-    Наследует:
-        - `Product`: Базовый класс товара.
-        - `MixinLogger`: Миксин для логирования событий создания объекта.
+    """Класс, представляющий газонную траву как товар.
 
     Attributes:
-        (экземпляра)
         country (str): Страна происхождения.
         germination_period (str): Период прорастания.
         color (str): Цвет травы.
     """
 
-    __slots__ = ('country', 'germination_period', 'color')  # Оптимизация памяти.
-
-    def __init__(self, name: str, description: str, price: float, quantity: int,
-                 country: str, germination_period: str, color: str):
+    def __init__(
+        self,
+        name: str,
+        description: str,
+        price: float,
+        quantity: int,
+        country: str,
+        germination_period: str,
+        color: str,
+    ) -> None:
         """
-        Инициализирует объект `LawnGrass`.
+        Инициализирует объект LawnGrass.
 
         Args:
-            name (str): Название продукта.
-            description (str): Описание продукта.
-            price (float): Цена продукта.
-            quantity (int): Количество продукта в наличии.
-            country (str): Страна происхождения.
+            name (str): Название товара.
+            description (str): Описание.
+            price (float): Цена за упаковку.
+            quantity (int): Количество на складе.
+            country (str): Страна производства.
             germination_period (str): Период прорастания.
             color (str): Цвет травы.
         """
+        super().__init__(name, description, price, quantity)
         self.country = country
         self.germination_period = germination_period
         self.color = color
-        super().__init__(name, description, price, quantity)
+
+        if self.__class__ is LawnGrass:
+            self.log_creation()
+
+    def __str__(self) -> str:
+        """Человекочитаемое представление товара."""
+        return (
+            f"{self.name} ({self.color}, из {self.country}) — "
+            f"{self.price} руб., в наличии: {self.quantity} шт."
+        )
 
     def __repr__(self) -> str:
-        """
-        Возвращает техническое представление объекта.
-
-        Returns:
-            str: Техническое представление объекта `LawnGrass`.
-        """
-        return f"{Product.__repr__(self)}, '{self.country}', '{self.germination_period}', '{self.color}'"
+        """Техническое строковое представление LawnGrass."""
+        base = super().__repr__()
+        return f"{base}, '{self.country}', '{self.germination_period}', '{self.color}'"

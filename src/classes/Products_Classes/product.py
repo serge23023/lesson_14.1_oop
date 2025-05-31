@@ -1,64 +1,54 @@
+from classes.Products_Classes.abstact_product import BaseProduct
 from classes.mixin_log import MixinLogger
 
 
-class Product(MixinLogger):
-    """
-    Класс `Product` описывает товар с основными атрибутами и методами для работы с ним.
-
-    Наследует:
-        - `MixinLogger`: Миксин для логирования объекта.
+class Product(BaseProduct, MixinLogger):
+    """Базовый класс товара.
 
     Attributes:
-        (экземпляра)
         name (str): Название товара.
         description (str): Описание товара.
-        __price (float): Цена товара.
-        quantity (int): Количество товара.
+        quantity (int): Количество на складе.
+        __price (float): Цена товара (через @property).
     """
-
-    __slots__ = ('name', 'description', '__price', 'quantity')  # Оптимизация памяти.
-
-    @classmethod
-    def edit_product(cls, price: float, quantity: int, product: 'Product') -> None:
-        """
-        Обновляет цену и количество товара.
-
-        Args:
-            price (float): Новая цена товара.
-            quantity (int): Количество для увеличения.
-            product (Product): Объект товара для редактирования.
-
-        Notes:
-            - Цена устанавливается через соответствующий сеттер.
-            - Количество увеличивается на переданное значение.
-        """
-        product.price = price  # Используем сеттер для обновления цены.
-        product.quantity += quantity  # Обновляем количество товара.
 
     def __init__(self, name: str, description: str, price: float, quantity: int) -> None:
         """
-        Инициализирует объект `Product`.
+        Инициализирует новый товар.
 
         Args:
             name (str): Название товара.
             description (str): Описание товара.
-            price (float): Цена товара.
-            quantity (int): Количество товара.
+            price (float): Начальная цена.
+            quantity (int): Начальное количество на складе.
         """
         self.name = name
         self.description = description
         self.__price = price
         self.quantity = quantity
-        self.log_creation()  # Логируем создание объекта.
+
+        if self.__class__ is Product:
+            self.log_creation()
+
+    def update(self, price: float, quantity: int) -> None:
+        """
+        Обновляет цену и увеличивает количество.
+
+        Args:
+            price (float): Новая цена.
+            quantity (int): Количество, которое нужно добавить.
+
+        Raises:
+            ValueError: Если цена не положительная.
+        """
+        if price <= 0:
+            raise ValueError("Цена должна быть положительной.")
+        self.__price = price
+        self.quantity += quantity
 
     @property
     def price(self) -> float:
-        """
-        Возвращает текущую цену товара.
-
-        Returns:
-            float: Цена товара.
-        """
+        """Текущая цена товара."""
         return self.__price
 
     @price.setter
@@ -67,58 +57,69 @@ class Product(MixinLogger):
         Устанавливает новую цену товара.
 
         Args:
-            value (float): Новая цена товара.
+            value (float): Новая цена.
 
         Raises:
-            ValueError: Если `value` отрицательное или равно нулю.
+            ValueError: Если значение не положительное.
 
         Notes:
-            - При попытке понизить цену запрашивается подтверждение от пользователя.
-            - Если цена валидна и выше текущей, устанавливается автоматически.
+            - При понижении цены требуется подтверждение.
+            - При повышении — цена устанавливается без подтверждения.
         """
         if value <= 0:
             print("Ошибка: Цена не должна быть нулевой или отрицательной.")
-        elif value < self.__price:  # Если новая цена ниже текущей, требуется подтверждение.
-            if input(f'Цена после подтверждения: {value} руб.\nВведите "y" для подтверждения понижения цены:') == 'y':
-                self.__price = value  # Устанавливаем новую цену после подтверждения.
+        elif value < self.__price:
+            confirm = input(
+                f"Новая цена ниже текущей ({self.__price} → {value}).\n"
+                'Введите "y" для подтверждения: '
+            )
+            if confirm == "y":
+                self.__price = value
+            else:
+                print("Понижение цены отменено.")
         else:
-            self.__price = value  # Устанавливаем новую цену без подтверждения.
+            self.__price = value
 
-    def __add__(self, other: 'Product') -> float:
+    def __add__(self, other: "Product") -> float:
         """
-        Складывает общую стоимость двух товаров.
-
-        Операция сложения вычисляет общую стоимость всех единиц товара,
-        умножая цену каждого продукта на его количество и суммируя результаты.
+        Складывает стоимость двух товаров.
 
         Args:
-            other (Product): Второй объект `Product`.
+            other (Product): Второй товар.
+
+        Returns:
+            float: Общая стоимость двух товаров.
 
         Raises:
-            TypeError: Если передан объект, который не является `Product`.
+            TypeError: Если объект не является Product.
+        """
+        if not isinstance(other, Product):
+            raise TypeError("Можно складывать только товары одного типа.")
+        return self.price * self.quantity + other.price * other.quantity
+
+    def __eq__(self, other: object) -> bool:
+        """
+        Сравнивает товары по имени и цене.
+
+        Args:
+            other (object): Второй объект.
 
         Returns:
-            float: Общая стоимость (`price * quantity`) двух товаров.
+            bool: True, если имя и цена совпадают.
         """
-        if not isinstance(other, Product) or not issubclass(type(other), type(self)):
-            raise TypeError("Операция сложения поддерживается только для объектов `Product` или его подклассов.")
-
-        return self.__price * self.quantity + other.__price * other.quantity
+        return (
+                isinstance(other, Product)
+                and self.name == other.name
+                and self.price == other.price
+        )
 
     def __str__(self) -> str:
-        """
-        Возвращает строковое представление объекта.
-
-        Returns:
-            str: Название товара, его цена и остаток.
-        """
+        """Человекочитаемое представление товара."""
         return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
 
     def __repr__(self) -> str:
-        """
-        Возвращает техническое представление объекта.
-
-        Returns:
-            str: Представление объекта для разработчиков.
-        """
-        return f"{self.__class__.__name__}('{self.name}', '{self.description}', {self.price}, {self.quantity})"
+        """Техническое строковое представление товара."""
+        return (
+            f"{self.__class__.__name__}('{self.name}', "
+            f"'{self.description}', {self.price}, {self.quantity})"
+        )

@@ -3,63 +3,52 @@ import json
 
 
 def open_json(file_name: str, recursive: bool = False) -> list:
-    """
-    Открывает JSON-файл, начиная поиск от корневой директории проекта.
-
-    Функция выполняет поиск указанного файла и загружает его содержимое. Если файл не найден,
-    вызывается исключение `FileNotFoundError`. Если файл содержит некорректный JSON, вызывается `JSONDecodeError`.
+    """Открывает JSON-файл из проекта и возвращает его содержимое.
 
     Args:
-        file_name (str): Название файла.
-        recursive (bool, optional): Определяет, искать ли файл рекурсивно в подкаталогах. По умолчанию False.
+        file_name (str): Имя JSON-файла.
+        recursive (bool, optional): Рекурсивный поиск. По умолчанию False.
 
     Returns:
-        list: Содержимое JSON-файла.
+        list: Содержимое JSON-файла как список.
 
     Raises:
         FileNotFoundError: Если файл не найден.
-        json.JSONDecodeError: Если файл не является корректным JSON.
+        json.JSONDecodeError: Если содержимое не является корректным JSON.
     """
-    # Определяем корневую директорию проекта
     project_root = Path(__file__).resolve().parent.parent
-
-    # Выполняем поиск файла
     file_path = find_file(file_name, project_root, recursive)
 
     try:
-        # Открываем файл и читаем содержимое
         with file_path.open("r", encoding="utf-8") as f:
             return json.load(f)
     except json.JSONDecodeError as e:
-        raise json.JSONDecodeError(f"Ошибка обработки JSON-файла '{file_name}': {e}", e.doc, e.pos) from e
+        raise json.JSONDecodeError(
+            f"Ошибка чтения JSON-файла '{file_name}': {e.msg}", e.doc, e.pos
+        ) from e
 
 
-def find_file(filename: str, search_dir: Path, recursive: bool = False) -> Path:
-    """
-    Находит файл в указанной директории или её подкаталогах.
-
-    Если `recursive=True`, выполняется поиск во всех вложенных папках. В противном случае поиск ограничен
-    указанной директорией. Если файл не найден, вызывается `FileNotFoundError`.
+def find_file(file_name: str, search_dir: Path, recursive: bool = False) -> Path:
+    """Ищет файл в указанной директории (с поддержкой рекурсивного поиска).
 
     Args:
-        filename (str): Название файла.
-        search_dir (Path): Директория для поиска.
-        recursive (bool, optional): Рекурсивно искать файл в подкаталогах. По умолчанию False.
+        file_name (str): Имя файла для поиска.
+        search_dir (Path): Базовая директория.
+        recursive (bool, optional): Поиск во всех подкаталогах. По умолчанию False.
 
     Returns:
-        Path: Объект Path к найденному файлу.
+        Path: Путь к найденному файлу.
 
     Raises:
         FileNotFoundError: Если файл не найден.
     """
     if recursive:
-        # Рекурсивный поиск файла
-        for file_path in search_dir.rglob(filename):
-            return file_path
+        for file_path in search_dir.rglob(file_name):
+            if file_path.is_file():
+                return file_path
     else:
-        # Поиск только в указанной директории
-        filepath = search_dir / filename
-        if filepath.exists():
-            return filepath
+        file_path = search_dir / file_name
+        if file_path.is_file():
+            return file_path
 
-    raise FileNotFoundError(f"Файл '{filename}' не найден в директории '{search_dir}'")
+    raise FileNotFoundError(f"Файл '{file_name}' не найден в '{search_dir}'")
