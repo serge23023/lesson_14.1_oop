@@ -44,11 +44,14 @@ class LawnGrass(Product, MixinLogger):
     def __str__(self) -> str:
         """Человекочитаемое представление товара."""
         return (
-            f"{self.name} ({self.color}, из {self.country}) — "
-            f"{self.price} руб., в наличии: {self.quantity} шт."
+            f"{self.name} — {self.description}, "
+            f"цвет: {self.color}, страна: {self.country}, "
+            f"{self.price} руб. ({self.quantity} шт.)"
         )
 
     def __repr__(self) -> str:
-        """Техническое строковое представление LawnGrass."""
-        base = super().__repr__()
-        return f"{base}, '{self.country}', '{self.germination_period}', '{self.color}'"
+        return (
+            f"{self.__class__.__name__}("
+            f"'{self.name}', '{self.description}', {self.price}, {self.quantity}, "
+            f"'{self.country}', '{self.germination_period}', '{self.color}')"
+        )

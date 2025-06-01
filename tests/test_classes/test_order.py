@@ -23,7 +23,10 @@ def test_order_str(product_iphone):
     product = Product(**product_iphone)
     order = Order(product, 2)
 
-    expected = f"Заказ: 2 × {product.name} на сумму {2 * product.price} руб."
+    expected = (
+        f"{order.quantity} × {order.product.name} "
+        f"(по {order.product.price} руб.) = {order.total_cost} руб."
+    )
     assert str(order) == expected
 
 
@@ -32,7 +35,7 @@ def test_order_repr(product_iphone):
     product = Product(**product_iphone)
     order = Order(product, 1)
 
-    expected = f"Order('{product.name}', 1, {product.price})"
+    expected = f"Order({repr(product)}, 1, {product.price})"
     assert repr(order) == expected
 
 

@@ -18,7 +18,7 @@ def test_product_basic_fields(product_iphone):
 def test_product_str(product_samsung):
     """Проверка __str__ метода."""
     p = Product(**product_samsung)
-    expected = f"{p.name}, {p.price} руб. Остаток: {p.quantity} шт."
+    expected = f"{p.name} — {p.description}, {p.price} руб. (в наличии: {p.quantity})"
     assert str(p) == expected
 
 

@@ -96,11 +96,13 @@ class Category(AbstractOrder, MixinLogger):
 
     def __str__(self) -> str:
         """Человекочитаемое представление категории."""
-        return f"\n{self.__name}, количество продуктов: {len(self)} шт."
+        return (
+            f"{self.__name} — {self.__description}, "
+            f"{len(self)} ед. (уникальных товаров: {len(self.__products)})"
+        )
 
     def __repr__(self) -> str:
-        """Техническое представление категории."""
         return (
-            f"{self.__class__.__name__}('{self.__name}', "
-            f"'{self.__description}', {self.__products})"
+            f"{self.__class__.__name__}("
+            f"'{self.name}', '{self.description}', {repr(self.products)})"
         )

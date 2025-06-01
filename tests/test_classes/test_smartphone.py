@@ -29,7 +29,11 @@ def test_smartphone_str(smartphone_test):
     """
     expected = (
         f"{smartphone_test.name} "
-        f"({smartphone_test.model}, {smartphone_test.memory}, {smartphone_test.color}) — "
-        f"{smartphone_test.price} руб., в наличии: {smartphone_test.quantity} шт."
+        f"— {smartphone_test.description}, {smartphone_test.model}, {smartphone_test.memory}, "
+        f"{smartphone_test.color}, {smartphone_test.price} руб. ({smartphone_test.quantity} шт.)"
     )
     assert str(smartphone_test) == expected
+
+
+def test_smartphone_repr(smartphone_test):
+    assert repr(smartphone_test).startswith("Smartphone(")
