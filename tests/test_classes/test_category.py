@@ -19,7 +19,8 @@ def test_category_basics(categories_test):
 
     # Категория должна содержать продукт из фикстуры
     assert len(category) == sum(p.quantity for p in category.products)
-    assert str(category).startswith(f"\n{category.name}, количество продуктов:")
+    assert str(category).startswith(f"{category.name} — ")
+    assert repr(category).startswith("Category(")
     assert Category.category_count >= 1  # type: ignore
     assert Category.product_count >= 1  # type: ignore
 

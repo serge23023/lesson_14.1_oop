@@ -48,14 +48,14 @@ class Smartphone(Product, MixinLogger):
     def __str__(self) -> str:
         """Упрощённое представление смартфона для пользователя."""
         return (
-            f"{self.name} ({self.model}, {self.memory}, {self.color}) — "
-            f"{self.price} руб., в наличии: {self.quantity} шт."
+            f"{self.name} — {self.description}, "
+            f"{self.model}, {self.memory}, {self.color}, "
+            f"{self.price} руб. ({self.quantity} шт.)"
         )
 
     def __repr__(self) -> str:
-        """Техническое представление смартфона."""
-        base = super().__repr__()
         return (
-            f"{base}, '{self.efficiency}', "
-            f"'{self.model}', '{self.memory}', '{self.color}'"
+            f"{self.__class__.__name__}("
+            f"'{self.name}', '{self.description}', {self.price}, {self.quantity}, "
+            f"'{self.efficiency}', '{self.model}', '{self.memory}', '{self.color}')"
         )

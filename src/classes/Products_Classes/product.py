@@ -114,12 +114,14 @@ class Product(BaseProduct, MixinLogger):
         )
 
     def __str__(self) -> str:
-        """Человекочитаемое представление товара."""
-        return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
+        return (
+            f"{self.name} — {self.description}, "
+            f"{self.price} руб. (в наличии: {self.quantity})"
+        )
 
     def __repr__(self) -> str:
-        """Техническое строковое представление товара."""
         return (
-            f"{self.__class__.__name__}('{self.name}', "
-            f"'{self.description}', {self.price}, {self.quantity})"
+            f"{self.__class__.__name__}("
+            f"'{self.name}', '{self.description}', {self.price}, {self.quantity})"
         )
+

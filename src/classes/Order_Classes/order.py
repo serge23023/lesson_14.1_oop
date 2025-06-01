@@ -33,14 +33,10 @@ class Order(AbstractOrder, MixinLogger):
 
     def __str__(self) -> str:
         """Упрощённое представление заказа."""
-        return (
-            f"Заказ: {self.quantity} × {self.product.name} "
-            f"на сумму {self.total_cost} руб."
-        )
+        return f"{self.quantity} × {self.product.name} (по {self.product.price} руб.) = {self.total_cost} руб."
 
     def __repr__(self) -> str:
-        """Техническое представление заказа."""
         return (
-            f"{self.__class__.__name__}('{self.product.name}', "
-            f"{self.quantity}, {self.total_cost})"
+            f"{self.__class__.__name__}("
+            f"{repr(self.product)}, {self.quantity}, {self.total_cost})"
         )

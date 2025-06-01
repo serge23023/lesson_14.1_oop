@@ -15,4 +15,5 @@ class MixinLogger:
         Использует метод __repr__(), который должен быть
         реализован в классе-наследнике.
         """
-        print(f"Создан объект: {self.__repr__()}\n")
+        class_name = self.__class__.__name__
+        print(f"Создан объект класса {class_name} с параметрами: {self}")
