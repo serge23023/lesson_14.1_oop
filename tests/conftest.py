@@ -8,8 +8,8 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../src'
 
 from classes.Order_Classes.category import Category  # noqa: E402
 from classes.Products_Classes.product import Product  # noqa: E402
-from classes.Products_Classes.Smartphone import Smartphone  # noqa: E402
-from classes.Products_Classes.Lawn_Grass import LawnGrass  # noqa: E402
+from classes.Products_Classes.smartphone import Smartphone  # noqa: E402
+from classes.Products_Classes.lawn_grass import LawnGrass  # noqa: E402
 
 
 @pytest.fixture()

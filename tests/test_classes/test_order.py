@@ -36,9 +36,10 @@ def test_order_repr(product_iphone):
     assert repr(order) == expected
 
 
-def test_order_negative_quantity(product_iphone):
-    """Проверка ошибки при создании заказа с отрицательным количеством."""
+def test_order_invalid_quantity(product_iphone, capsys):
+    """Проверка ошибки при создании заказа с нулевым количеством."""
     product = Product(**product_iphone)
-
-    with pytest.raises(ValueError):
-        Order(product, 0)
+    Order(product, 0)  # Исключение обрабатывается внутри конструктора
+    captured = capsys.readouterr()
+    assert "Нельзя добавить товар с нулевым или отрицательным количеством." in captured.out
+    assert "Обработка оформления заказа завершена" in captured.out

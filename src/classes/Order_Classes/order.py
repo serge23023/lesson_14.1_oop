@@ -1,6 +1,7 @@
 from classes.Order_Classes.abstract_order import AbstractOrder
 from classes.mixin_log import MixinLogger
 from classes.Products_Classes.product import Product
+from classes.exceptions import InvalidQuantityException
 
 
 class Order(AbstractOrder, MixinLogger):
@@ -12,24 +13,30 @@ class Order(AbstractOrder, MixinLogger):
         total_cost (float): Общая стоимость заказа.
     """
 
-    def __init__(self, product: Product, quantity: int) -> None:
+    def __init__(self, product, quantity):
         """
+        Инициализация заказа на продукт с заданным количеством.
+
         Args:
-            product (Product): Товар.
-            quantity (int): Количество.
+            product (Product): Продукт для заказа.
+            quantity (int): Количество заказываемого товара.
 
         Raises:
-            ValueError: Если количество не положительное.
+            InvalidQuantityException: Если quantity <= 0
         """
-        if quantity <= 0:
-            raise ValueError("Количество должно быть положительным.")
-
-        self.product = product
-        self.quantity = quantity
-        self.total_cost = self.quantity * self.product.price
-
-        if self.__class__ is Order:
+        try:
+            if quantity <= 0:
+                raise InvalidQuantityException()
+        except InvalidQuantityException as e:
+            print(e)
+        else:
+            self.product = product
+            self.quantity = quantity
+            self.total_cost = self.quantity * self.product.price
             self.log_creation()
+            print("Товар добавлен")
+        finally:
+            print("Обработка оформления заказа завершена")
 
     def __str__(self) -> str:
         """Упрощённое представление заказа."""
