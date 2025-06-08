@@ -1,6 +1,7 @@
 from classes.Order_Classes.abstract_order import AbstractOrder
 from classes.mixin_log import MixinLogger
 from classes.Products_Classes.product import Product
+from classes.exceptions import InvalidQuantityException
 
 
 class Category(AbstractOrder, MixinLogger):
@@ -78,17 +79,38 @@ class Category(AbstractOrder, MixinLogger):
 
         Raises:
             TypeError: Если передан не Product.
+            InvalidQuantityException: Если количество меньше или равно 0.
         """
         if not isinstance(product, Product):
             raise TypeError("Ожидается объект класса Product")
 
-        for existing_product in self.__products:
-            if product.name == existing_product.name:
-                existing_product.update(product.price, product.quantity)
-                return
+        try:
+            if product.quantity <= 0:
+                raise InvalidQuantityException()
+        except InvalidQuantityException as e:
+            print(e)
+        else:
+            for existing_product in self.__products:
+                if product.name == existing_product.name:
+                    existing_product.update(product.price, product.quantity)
+                    break
+            else:
+                Category.__product_count += 1
+                self.__products.append(product)
+            print("Товар добавлен")
+        finally:
+            print("Обработка добавления товара завершена")
 
-        Category.__product_count += 1
-        self.__products.append(product)
+    def middle_price(self) -> float:
+        """Вычисляет среднюю цену товаров в категории.
+
+        Returns:
+            float: Средняя цена, либо 0.0, если товаров нет.
+        """
+        try:
+            return sum(p.price for p in self.__products) / len(self.__products)
+        except ZeroDivisionError:
+            return 0.0
 
     def __len__(self) -> int:
         """Общее количество единиц товаров в категории."""

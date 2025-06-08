@@ -104,3 +104,8 @@ def test_price_setter_negative_value(capsys):
     captured = capsys.readouterr()
     assert "Ошибка: Цена не должна быть нулевой или отрицательной." in captured.out
     assert p.price == 100.0
+
+
+def test_product_zero_quantity_raises():
+    with pytest.raises(ValueError, match="Товар с нулевым количеством не может быть добавлен"):
+        Product("test", "desc", 10.0, 0)

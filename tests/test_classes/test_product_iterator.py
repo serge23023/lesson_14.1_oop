@@ -1,6 +1,6 @@
 import pytest
 
-from classes.Products_Classes.Product_Iterator import ProductIterator
+from classes.Products_Classes.product_iterator import ProductIterator
 from classes.Products_Classes.product import Product
 
 

@@ -21,7 +21,13 @@ class Product(BaseProduct, MixinLogger):
             description (str): Описание товара.
             price (float): Начальная цена.
             quantity (int): Начальное количество на складе.
+
+        Raises:
+            ValueError: Если количество товара нулевое.
         """
+        if quantity == 0:
+            raise ValueError("Товар с нулевым количеством не может быть добавлен")
+
         self.name = name
         self.description = description
         self.__price = price
